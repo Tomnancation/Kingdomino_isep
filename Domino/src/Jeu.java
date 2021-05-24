@@ -30,7 +30,7 @@ public class Jeu extends BasicGame {
 	public static int NumeroRoi;
 	public static int tour = 1;
 	public static List<Joueur> joueurList = new ArrayList<>();
-	
+
 	
 	//on configure les touches haut bas gauche droite du clavier
 	public final static int HAUT = Input.KEY_UP;
@@ -51,6 +51,8 @@ public class Jeu extends BasicGame {
 	public final static Color MESSAGE_COLOR = Color.white;
 	public final static Color ALTERNATIVE_MESSAGE = Color.black;
 	public final static Color WARNING_COLOR = Color.red;
+	
+	static List<Roi> roiList = new ArrayList<Roi>();
 	
 	static TextField textField;
 	static Domino displayedDomino;
@@ -236,9 +238,9 @@ public class Jeu extends BasicGame {
 						RoiList.add(k);
 						p.getRois().add(k);
 					}
-					JoueurList.add(p);
+					joueurList.add(p);
 					createdJoueur++;
-					System.out.println(JoueurList);
+					System.out.println(joueurList);
 					System.out.println(RoiList);
 					textField.setText("");
 
@@ -251,7 +253,7 @@ public class Jeu extends BasicGame {
 				displayedString2 = "";
 				dominoList = configDominoList();
 
-				GAME_PHASE = round == 1 ? SHUFFLE_RoiS : DRAW_DOMINOS;
+				GAME_PHASE = tour == 1 ? SHUFFLE_RoiS : DRAW_DOMINOS;
 			}
 			break;
 
