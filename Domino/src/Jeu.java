@@ -15,6 +15,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.gui.TextField;
 
 public class Jeu extends BasicGame {
 
@@ -30,6 +31,7 @@ public class Jeu extends BasicGame {
 	public static int tour = 1;
 	public static List<Joueur> joueurList = new ArrayList<>();
 	
+	
 	//on configure les touches haut bas gauche droite du clavier
 	public final static int HAUT = Input.KEY_UP;
 	public final static int BAS = Input.KEY_DOWN;
@@ -37,10 +39,30 @@ public class Jeu extends BasicGame {
 	public final static int DROITE = Input.KEY_RIGHT;
 	public final static int CONFIRM = Input.KEY_ENTER;
 	
+	public final static int MAIN_SCREEN = 0;
+	public static final int INPUT_Joueur_NUMBER = 1;
+	public final static int CREAT_JoueurS = 2;
+	public final static int SHUFFLE_RoiS = 3;
+	public final static int DRAW_DOMINOS = 4;
+	public final static int CHOSE_DOMINO = 5;
+	public final static int PLACE_DOMINO = 6;
+	public final static int GAME_OVER = 100;
+	
 	public final static Color MESSAGE_COLOR = Color.white;
 	public final static Color ALTERNATIVE_MESSAGE = Color.black;
 	public final static Color WARNING_COLOR = Color.red;
 	
+	static TextField textField;
+	static Domino displayedDomino;
+	static String displayedString1 = "";
+	static String displayedString2 = "";
+	
+	static int createdJoueur = 0;
+	static int RoiChoseDomino = 0;
+	static int playedRoi = 0;
+	static int totalRound;
+
+
 	public static Image CHAMPS_IMAGE;
 	public static Image FORET_IMAGE;
 	public static Image MER_IMAGE;
@@ -53,9 +75,19 @@ public class Jeu extends BasicGame {
 	public static List<Domino> dominoList = new ArrayList<>();;
 	static List<Domino> dominoListDraw = new ArrayList<>();;
 	static List<Domino> dominoTempList;
-	static List<Roi> kingList = new ArrayList<Roi>();
-	static Map<Roi, Domino> kingToDomino = new LinkedHashMap<Roi, Domino>();
-	static Map<Roi, Domino> tempKingToDomino = new LinkedHashMap<Roi, Domino>();
+	static List<Roi> RoiList = new ArrayList<Roi>();
+	static Map<Roi, Domino> RoiToDomino = new LinkedHashMap<Roi, Domino>();
+	static Map<Roi, Domino> tempRoiToDomino = new LinkedHashMap<Roi, Domino>();
+	
+	public static int GAME_PHASE = 0;
+	public static Joueur currentJoueur;
+	public static Roi currentRoi;
+	public static Domino currentDomino;
+	
+	// Valid check
+		public static boolean NumeroJoueurValid(int JoueurN) {
+			return 2 <= JoueurN && JoueurN <= 4;
+		}
 	
 	public static List loadDominos(String filePath) {
 		List dominoList = new ArrayList<Domino>();   // On créer une liste de dominos
@@ -135,6 +167,322 @@ public class Jeu extends BasicGame {
 		mainScreen = new Image("main.jpg");
 
 	}
+	@Override
+	public void update(GameContainer gameContainer, int delta) throws SlickException {
+		// System.out.println("current phase" + GAME_PHASE);
+		Input input = gameContainer.getInput();
+
+		float x, y;
+		int i1, i2;
+		switch (GAME_PHASE) {
+
+		case MAIN_SCREEN:
+			if (input.isKeyPressed(CONFIRM)) {
+				GAME_PHASE++;
+			}
+			break;
+
+		case INPUT_Joueur_NUMBER:
+			displayedString1 = "Saisissez le nombre de joueur (chiffre entier 2 a 4) : ";
+			int n = 0;
+			if (input.isKeyPressed(CONFIRM)) {
+				try {
+					n = Integer.parseInt(textField.getText());
+				} catch (Exception e) {
+					displayedString2 = "Erreur : Veuillez entrer un nombre entier entre 2 et 4.";
+					textField.setText("");
+				}
+
+				if (!NumeroJoueurValid(n)) {
+					displayedString2 = "Erreur : Veuillez entrer un nombre entier entre 2 et 4.";
+					textField.setText("");
+				} else {
+					NumeroJoueur = n;
+					NumeroRoi = (NumeroJoueur == 2 || NumeroJoueur == 4) ? 4 : 3;
+					textField.setText("");
+					totalRound = (NumeroJoueur == 2) ? 6 : 12;
+					GAME_PHASE++;
+				}
+			}
+			break;
+
+		case CREAT_JoueurS:
+
+			displayedString1 = "";
+			displayedString2 = "";
+
+			displayedString1 = "Nombre de joueur : " + String.valueOf(NumeroJoueur);
+
+			ArrayList<String> listColor = new ArrayList<String>(Arrays.asList("red", "yellow", "green", "blue"));
+			int RoiPerJoueur = NumeroJoueur == 2 ? 2 : 1;
+
+			if (createdJoueur < NumeroJoueur) {
+
+				displayedString2 = "Saisissez le nom du joueur No." + String.valueOf(createdJoueur + 1);
+				String name = "";
+				if (input.isKeyPressed(input.KEY_ENTER)) {
+					name = textField.getText();
+					name = name.isEmpty() ? "Joueur" + Integer.toString(createdJoueur + 1) : name;
+					Joueur p;
+					// = new Joueur(name, listColor.get(createdJoueur), RoiPerJoueur);
+
+					if (name.equals("AI")) {
+						p = new AI(name, listColor.get(createdJoueur), RoiPerJoueur);
+					} else {
+						p = new Joueur(name, listColor.get(createdJoueur), RoiPerJoueur);
+					}
+					for (int j = 0; j < RoiPerJoueur; j++) {
+						Roi k = new Roi(listColor.get(createdJoueur));
+						RoiList.add(k);
+						p.getRois().add(k);
+					}
+					JoueurList.add(p);
+					createdJoueur++;
+					System.out.println(JoueurList);
+					System.out.println(RoiList);
+					textField.setText("");
+
+				}
+
+			}
+
+			else {
+				displayedString1 = "";
+				displayedString2 = "";
+				dominoList = configDominoList();
+
+				GAME_PHASE = round == 1 ? SHUFFLE_RoiS : DRAW_DOMINOS;
+			}
+			break;
+
+		case SHUFFLE_RoiS:
+
+			if (!RoisShuffled) {
+				Collections.shuffle(RoiList);
+				if (input.isKeyPressed(CONFIRM)) {
+					RoisShuffled = true;
+
+				}
+			}
+
+			if (input.isKeyPressed(CONFIRM)) {
+				GAME_PHASE = DRAW_DOMINOS;
+				// RoisShuffled = false;
+				displayedString1 = "";
+				displayedString2 = "";
+			}
+			break;
+
+		case DRAW_DOMINOS:
+
+			dominoListDraw = drawDominos();
+			dominoListDraw = sortDominoByNum(dominoListDraw);
+			dominoTempList = dupliqueDominoList(dominoListDraw);
+			GAME_PHASE = CHOSE_DOMINO;
+			System.out.println(dominoListDraw);
+			displayedString1 = "";
+			displayedString2 = "";
+
+			break;
+
+		case CHOSE_DOMINO:
+
+			x = width * 0.125f;
+			y = height * 0.3f;
+
+			if (!tempRoiToDominoInitialised) {
+
+				tempRoiToDominoInitialised = true;
+				System.out.println(tempRoiToDomino);
+			}
+
+			if (RoiChoseDomino < RoiList.size()) {
+				currentRoi = RoiList.get(RoiChoseDomino);
+				currentJoueur = getJoueurByRoi(currentRoi);
+
+			}
+			// currentRoi.choseDomino(input);
+			if (currentJoueur.JoueurType.equals("Person")) {
+				if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)) {
+					int posX = input.getMouseX();
+					int posY = input.getMouseY();
+
+					// System.out.println(x + " " + y);
+					// System.out.println(x * 3 * Game.dominoWidth + " " + (x + Game.dominoWidth *
+					// (2 + 3)));
+					// System.out.println(x * 3 * Game.dominoWidth + " " + (x + Game.dominoWidth *
+					// (2 + 3 * 2)));
+					// System.out.println();
+					// System.out.println(posX + " " + posY);
+
+					for (int i4 = 0; i4 < dominoListDraw.size(); i4++) {
+						if ((x + i4 * 3 * dominoWidth < posX) && (posX < (x + dominoWidth * (2 + 3 * i4)))
+								&& ((y < posY) && (posY < (y + Game.dominoWidth * 2)))) {
+							Domino d = dominoListDraw.get(i4);
+							dominoListDraw.remove(d);
+							tempRoiToDomino.put(currentRoi, d);
+							RoiChoseDomino++;
+							System.out.println(RoiChoseDomino);
+							System.out.println(currentRoi.getId());
+
+						}
+					}
+
+				}
+			} else {
+				if (!dominoListDraw.isEmpty()) {
+					if (Game.round == 1) {
+
+						int index = currentJoueur.chooseBestDominoTurn1(dominoListDraw);
+						Domino d = dominoListDraw.get(index);
+						tempRoiToDomino.put(currentRoi, d);
+						dominoListDraw.remove(index);
+						RoiChoseDomino++;
+
+					} else {
+
+						Domino pre = RoiToDomino.get(currentRoi);
+						int bestX = currentJoueur.bestPosition(pre)[1];
+						int bestY = currentJoueur.bestPosition(pre)[2];
+						int bestDirection = currentJoueur.bestPosition(pre)[3];
+						int index = currentJoueur.chooseBestDomino(pre, bestX, bestY, bestDirection, dominoListDraw);
+						Domino d = dominoListDraw.get(index);
+						tempRoiToDomino.put(currentRoi, d);
+						dominoListDraw.remove(d);
+						RoiChoseDomino++;
+
+					}
+				}
+			}
+
+			if (RoiChoseDomino >= NumeroRoi && input.isKeyPressed(CONFIRM)) {
+				RoiChoseDomino = 0;
+				tempRoiToDominoInitialised = false;
+				displayedString1 = "";
+				displayedString2 = "";
+				if (round == 1) {
+					GAME_PHASE = DRAW_DOMINOS;
+					RoiToDomino = dupliqueTempRoiToDomino();
+					RoiList = configRoiListForNextTurn(dominoTempList);
+					round++;
+
+				} else {
+					GAME_PHASE = PLACE_DOMINO;
+					printRoiToDomino();
+
+				}
+
+			}
+
+			break;
+
+		case PLACE_DOMINO:
+
+			if (playedRoi < RoiList.size()) {
+				currentRoi = RoiList.get(playedRoi);
+				currentJoueur = getJoueurByRoi(currentRoi);
+				currentDomino = RoiToDomino.get(currentRoi);
+				currentDomino.update(input);
+			}
+
+			if (playedRoi < NumeroRoi) {
+				if (currentJoueur.JoueurType.equals("Person")) {
+
+					if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)) {
+						int posX = input.getMouseX();
+						int posY = input.getMouseY();
+
+						float x1 = Joueur.RENDER_START_PT_X;
+						float y1 = Joueur.RENDER_START_PT_Y;
+
+						boolean putOk = false;
+						for (int i = 0; i < Joueur.LAND_DIMENSION; i++) {
+							for (int j = 0; j < Joueur.LAND_DIMENSION; j++) {
+								float xij = x1 + j * Game.dominoWidth;
+								float yij = y1 + i * Game.dominoWidth;
+								if ((xij < posX && posX < xij + dominoWidth) && (yij < posY && posY < yij + dominoWidth)
+										&& (!currentJoueur.isLandOccupied(currentDomino, i, j)
+												&& currentJoueur.isPlaceOk(currentDomino, i, j))) {
+									currentJoueur.placeDomino(currentDomino, i, j);
+									if (!currentJoueur.isDimensionOk()) {
+										currentJoueur.removeDominoFromLand(currentDomino, i, j);
+										System.out.println("Dimension out of bounds !");
+										displayedString2 = "La dimension limite est 5 X 5";
+									} else if (currentJoueur.isDimensionOk()) {
+										putOk = true;
+										currentDomino = null;
+										currentJoueur.printLand();
+										printJoueurInfo(currentJoueur);
+										currentJoueur.calculateScore();
+									}
+
+								}
+
+							}
+						}
+						if (putOk || !currentJoueur.detectPositions(currentDomino)) {
+
+							playedRoi++;
+						}
+
+					}
+				} else {
+					if (currentDomino != null) {
+						currentJoueur.place(currentDomino);
+						currentDomino = null;
+						playedRoi++;
+					}
+
+				}
+			}
+
+			if (playedRoi >= NumeroRoi && input.isKeyPressed(CONFIRM)) {
+
+				if (round < totalRound) {
+					GAME_PHASE = DRAW_DOMINOS;
+				} else if (round == totalRound) {
+					GAME_PHASE = PLACE_DOMINO;
+				} else {
+					GAME_PHASE = GAME_OVER;
+
+				}
+				displayedString1 = "";
+				displayedString2 = "";
+
+				playedRoi = 0;
+				currentJoueur = null;
+				currentDomino = null;
+				RoiToDomino = dupliqueTempRoiToDomino();
+				for (Joueur p : JoueurList) {
+					printJoueurInfo(p);
+				}
+				RoiList = configRoiListForNextTurn(dominoTempList);
+				dominoTempList.clear();
+				round++;
+				if (dominoList.isEmpty()) {
+					lastRoundFlag = true;
+
+				}
+
+			}
+
+			break;
+
+		case GAME_OVER:
+
+			if (!scoreCalculated) {
+				finalScore();
+			}
+			displayedString1 = "GAME OVER   THE WINNER IS : " + winner.getJoueurName();
+			displayedString2 = "SCORE : " + winnerScore;
+
+			break;
+
+		}
+
+		// mousePressedPosition(input);
+
+	}
 	
 	public static void printDominoList(List l) {
 		int i = 0;
@@ -173,7 +521,7 @@ public class Jeu extends BasicGame {
 			tempList.add(dominoList.get(0));
 			dominoList.remove(0);
 		}
-		// tempList = dominoList.subList(0, kingNum);
+		// tempList = dominoList.subList(0, NumeroRoi);
 		return tempList;
 	}
 	
@@ -198,9 +546,9 @@ public class Jeu extends BasicGame {
 	
 	// on place les domino par ordre croissant 
 	
-	public static List configPlayerOrder() {
+	public static List configJoueurOrder() {
 		List tempList = new ArrayList<Joueur>();
-		for (Roi k : kingList) {
+		for (Roi k : RoiList) {
 			for (Joueur p : joueurList) {
 				if (k.getCouleur() == p.getCouleurRoi()) {
 					tempList.add(p.getId());
