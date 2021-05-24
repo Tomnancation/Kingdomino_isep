@@ -81,6 +81,11 @@ public class Jeu extends BasicGame {
 	static Map<Roi, Domino> RoiToDomino = new LinkedHashMap<Roi, Domino>();
 	static Map<Roi, Domino> tempRoiToDomino = new LinkedHashMap<Roi, Domino>();
 	
+	static boolean RoisShuffled = false;
+	static boolean tempKingToDominoInitialised = false;
+	static boolean scoreCalculated = false;
+	static boolean lastRoundFlag = false;
+	
 	public static int GAME_PHASE = 0;
 	public static Joueur currentJoueur;
 	public static Roi currentRoi;
