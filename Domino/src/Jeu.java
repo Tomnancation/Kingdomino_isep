@@ -159,6 +159,21 @@ public class Jeu extends BasicGame {
 			// dominoTempList.clear();
 			tour++;
 		}
+		
+		public static void printRoiList(List<Roi> l) {
+			Iterator<Roi> iterator = l.iterator();
+			while (iterator.hasNext()) {
+				printRoiInfo(iterator.next());
+			}
+			System.out.println("Nombre de rois : " + l.size());
+		}
+		public static void printRoiInfo(Roi k) {
+			System.out.println("-------------------");
+			System.out.println(k.getColor() + " king");
+			System.out.println("king id : " + k.getId());
+			System.out.println("-------------------");
+		}
+
 	public static List loadDominos(String filePath) {
 		List dominoList = new ArrayList<Domino>();   // On créer une liste de dominos
 		Scanner scanner;                             // pour avoir accès au clavier
@@ -212,6 +227,16 @@ public class Jeu extends BasicGame {
 		}
 		return null;
 	}
+	public static void printJoueurInfo(Joueur p) {
+		System.out.println("Joueur No." + p.getId());
+		System.out.println("Joueur name : " + p.getJoueurName());
+		System.out.println("Roi number : " + p.getKingNum());
+		System.out.println("Roi color : " + p.getRoicolor());
+		printRoiList(p.getRois());
+		p.printLand();
+		System.out.println();
+	}
+
 
 	
 	// methode qui va permettre d'importer toutes nos images 
@@ -465,7 +490,7 @@ public class Jeu extends BasicGame {
 			}
 
 			if (playedRoi < NumeroRoi) {
-				if (currentJoueur.JoueurType.equals("Person")) {
+				if (currentJoueur.joueurType.equals("Person")) {
 
 					if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)) {
 						int posX = input.getMouseX();
@@ -477,8 +502,8 @@ public class Jeu extends BasicGame {
 						boolean putOk = false;
 						for (int i = 0; i < Joueur.LAND_DIMENSION; i++) {
 							for (int j = 0; j < Joueur.LAND_DIMENSION; j++) {
-								float xij = x1 + j * Game.dominoWidth;
-								float yij = y1 + i * Game.dominoWidth;
+								float xij = x1 + j * Jeu.dominoWidth;
+								float yij = y1 + i * Jeu.dominoWidth;
 								if ((xij < posX && posX < xij + dominoWidth) && (yij < posY && posY < yij + dominoWidth)
 										&& (!currentJoueur.isLandOccupied(currentDomino, i, j)
 												&& currentJoueur.isPlaceOk(currentDomino, i, j))) {
