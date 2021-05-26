@@ -62,9 +62,13 @@ public class Jeu extends BasicGame {
 	static int createdJoueur = 0;
 	static int RoiChoseDomino = 0;
 	static int playedRoi = 0;
-	static int totalRound;
+	static int totaltour;
 
 
+	static boolean kingsShuffled = false;
+	static boolean tempRoiToDominoInitialised = false;
+
+	
 	public static Image CHAMPS_IMAGE;
 	public static Image FORET_IMAGE;
 	public static Image MER_IMAGE;
@@ -84,7 +88,7 @@ public class Jeu extends BasicGame {
 	static boolean RoisShuffled = false;
 	static boolean tempKingToDominoInitialised = false;
 	static boolean scoreCalculated = false;
-	static boolean lastRoundFlag = false;
+	static boolean lasttourFlag = false;
 	
 	public static int GAME_PHASE = 0;
 	public static Joueur currentJoueur;
@@ -95,7 +99,66 @@ public class Jeu extends BasicGame {
 		public static boolean NumeroJoueurValid(int JoueurN) {
 			return 2 <= JoueurN && JoueurN <= 4;
 		}
-	
+		
+		public static List dupliqueDominoList(List l) {
+			List<Domino> dominoTempList = new ArrayList<Domino>();
+			Iterator<Domino> iter = l.iterator();
+			while (iter.hasNext()) {
+				dominoTempList.add(iter.next());
+			}
+			return dominoTempList;
+		}
+		
+		public static void tour() {
+
+			dominoListDraw = drawDominos();
+			printDominoList(dominoListDraw);
+			System.out.println("___________________________________________________");
+			dominoListDraw = sortDominoByNum(dominoListDraw);
+			printDominoList(dominoListDraw);
+			System.out.println("___________________________________________________");
+			List dominoTempList = dupliqueDominoList(dominoListDraw);
+			printDominoList(dominoTempList);
+			if (tour == 1) {
+				Collections.shuffle(kingList);
+			}
+			System.out.println("___________________________________________________");
+			System.out.println("L'ordre de ce tour : ");
+			printKingList(kingList);
+			System.out.println("___________________________________________________");
+
+			System.out.println("___________________________________________________");
+			Map tempKingToDomino = new LinkedHashMap<King, Domino>();
+
+			for (King k : kingList) {
+				Player p = getPlayerByKing(k);
+				// printPlayerInfo(p);
+				if (tour != 1) {
+					// place domino
+					int x, y;
+					Domino domino = kingToDomino.get(k);
+					do {
+						domino.turnDomino();
+						x = inputPosition() - 1;
+						y = inputPosition() - 1;
+					} while (!p.isPlaceOk(domino, x, y) && !p.isLandOccupied(domino, x, y));
+					p.placeDomino(domino, x, y);
+				}
+				tempKingToDomino.put(k, k.draw());
+			}
+
+			kingToDomino = tempKingToDomino;
+
+			System.out.println("___________________________________________________");
+			printKingToDomino();
+			System.out.println("___________________________________________________");
+			printDominoList(dominoTempList);
+			kingList = configKingListForNextTurn(dominoTempList);
+			printKingList(kingList);
+
+			// dominoTempList.clear();
+			tour++;
+		}
 	public static List loadDominos(String filePath) {
 		List dominoList = new ArrayList<Domino>();   // On créer une liste de dominos
 		Scanner scanner;                             // pour avoir accès au clavier
@@ -141,6 +204,15 @@ public class Jeu extends BasicGame {
 		} while (!loadSuccessful);
 		return dominoList;
 	}
+	public static Joueur getJoueurByRoi(Roi k) {
+		for (Joueur p : joueurList) {
+			if (p.getRois().contains(k)) {
+				return p;
+			}
+		}
+		return null;
+	}
+
 	
 	// methode qui va permettre d'importer toutes nos images 
 	@Override
@@ -165,11 +237,11 @@ public class Jeu extends BasicGame {
 		PRAIRIE_IMAGE = new Image("prairie.png");
 		CHATEAU_IMAGE = new Image("chateau.jpg");
 		EMPTY_IMAGE = new Image("empty.jpg");
-		Image background; 
+		Image backgtour; 
 		Image mainScreen; 
 		Image panel;
 
-		background = new Image("board2.png");
+		backgtour = new Image("board2.png");
 		panel = new Image("yangpizhi.png");
 		mainScreen = new Image("main.jpg");
 
@@ -207,7 +279,7 @@ public class Jeu extends BasicGame {
 					NumeroJoueur = n;
 					NumeroRoi = (NumeroJoueur == 2 || NumeroJoueur == 4) ? 4 : 3;
 					textField.setText("");
-					totalRound = (NumeroJoueur == 2) ? 6 : 12;
+					totaltour = (NumeroJoueur == 2) ? 6 : 12;
 					GAME_PHASE++;
 				}
 			}
@@ -309,7 +381,7 @@ public class Jeu extends BasicGame {
 
 			}
 			// currentRoi.choseDomino(input);
-			if (currentJoueur.JoueurType.equals("Person")) {
+			if (currentJoueur.joueurType.equals("Person")) {
 				if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)) {
 					int posX = input.getMouseX();
 					int posY = input.getMouseY();
@@ -324,7 +396,7 @@ public class Jeu extends BasicGame {
 
 					for (int i4 = 0; i4 < dominoListDraw.size(); i4++) {
 						if ((x + i4 * 3 * dominoWidth < posX) && (posX < (x + dominoWidth * (2 + 3 * i4)))
-								&& ((y < posY) && (posY < (y + Game.dominoWidth * 2)))) {
+								&& ((y < posY) && (posY < (y + Jeu.dominoWidth * 2)))) {
 							Domino d = dominoListDraw.get(i4);
 							dominoListDraw.remove(d);
 							tempRoiToDomino.put(currentRoi, d);
@@ -338,7 +410,7 @@ public class Jeu extends BasicGame {
 				}
 			} else {
 				if (!dominoListDraw.isEmpty()) {
-					if (Game.round == 1) {
+					if (Jeu.tour == 1) {
 
 						int index = currentJoueur.chooseBestDominoTurn1(dominoListDraw);
 						Domino d = dominoListDraw.get(index);
@@ -367,11 +439,11 @@ public class Jeu extends BasicGame {
 				tempRoiToDominoInitialised = false;
 				displayedString1 = "";
 				displayedString2 = "";
-				if (round == 1) {
+				if (tour == 1) {
 					GAME_PHASE = DRAW_DOMINOS;
 					RoiToDomino = dupliqueTempRoiToDomino();
 					RoiList = configRoiListForNextTurn(dominoTempList);
-					round++;
+					tour++;
 
 				} else {
 					GAME_PHASE = PLACE_DOMINO;
@@ -445,9 +517,9 @@ public class Jeu extends BasicGame {
 
 			if (playedRoi >= NumeroRoi && input.isKeyPressed(CONFIRM)) {
 
-				if (round < totalRound) {
+				if (tour < totaltour) {
 					GAME_PHASE = DRAW_DOMINOS;
-				} else if (round == totalRound) {
+				} else if (tour == totaltour) {
 					GAME_PHASE = PLACE_DOMINO;
 				} else {
 					GAME_PHASE = GAME_OVER;
@@ -465,9 +537,9 @@ public class Jeu extends BasicGame {
 				}
 				RoiList = configRoiListForNextTurn(dominoTempList);
 				dominoTempList.clear();
-				round++;
+				tour++;
 				if (dominoList.isEmpty()) {
-					lastRoundFlag = true;
+					lasttourFlag = true;
 
 				}
 
