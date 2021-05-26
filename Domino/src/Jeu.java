@@ -63,6 +63,8 @@ public class Jeu extends BasicGame {
 	static int RoiChoseDomino = 0;
 	static int playedRoi = 0;
 	static int totaltour;
+	static Joueur winner;
+	static int winnerScore;
 
 
 	static boolean kingsShuffled = false;
@@ -120,15 +122,15 @@ public class Jeu extends BasicGame {
 			List dominoTempList = dupliqueDominoList(dominoListDraw);
 			printDominoList(dominoTempList);
 			if (tour == 1) {
-				Collections.shuffle(kingList);
+				Collections.shuffle(RoiList);
 			}
 			System.out.println("___________________________________________________");
 			System.out.println("L'ordre de ce tour : ");
-			printKingList(kingList);
+			printRoiList(RoiList);
 			System.out.println("___________________________________________________");
 
 			System.out.println("___________________________________________________");
-			Map tempKingToDomino = new LinkedHashMap<King, Domino>();
+			Map tempKingToDomino = new LinkedHashMap<Roi, Domino>();
 
 			for (King k : kingList) {
 				Player p = getPlayerByKing(k);
@@ -229,16 +231,29 @@ public class Jeu extends BasicGame {
 	}
 	public static void printJoueurInfo(Joueur p) {
 		System.out.println("Joueur No." + p.getId());
-		System.out.println("Joueur name : " + p.getJoueurName());
-		System.out.println("Roi number : " + p.getKingNum());
-		System.out.println("Roi color : " + p.getRoicolor());
+		System.out.println("Joueur name : " + p.getNomJoueur());
+		System.out.println("Roi number : " + p.getNumeroRoi());
+		System.out.println("Roi color : " + p.getCouleurRoi());
 		printRoiList(p.getRois());
 		p.printLand();
 		System.out.println();
 	}
+	public static void finalScore() {
+		winner = joueurList.get(0);
+		winner.calculateScore();
+		winnerScore = winner.score;
+		for (Joueur p : joueurList) {
+			int score = p.finalScore();
+			if (score > winnerScore) {
+				winner = p;
+				winnerScore = score;
+			}
+		}
+		System.out.println("The winner is : " + winner.getNomJoueur());
+		scoreCalculated = true;
+	}
 
 
-	
 	// methode qui va permettre d'importer toutes nos images 
 	@Override
 	public void init(GameContainer gameContainer) throws SlickException {
