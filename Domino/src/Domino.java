@@ -1,7 +1,6 @@
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-
+import java.util.*;
+import java.io.*;
+import org.newdawn.slick.*;
 public class Domino {
 	
 	public static Image couronne = Royaume.couronne;
@@ -153,6 +152,13 @@ public class Domino {
 		} while (!over);
 
 	}
+	public void turnDminoRight() {
+		direction = direction == D4 ? D1 : ++direction;
+	}
+
+	public void turnDominoLeft() {
+		direction = direction == D1 ? D4 : --direction;
+	}
 	
 	// valid check
 		public static boolean crownNumValid(int crownNum) {
@@ -204,5 +210,17 @@ public class Domino {
 
 			}
 	
+		}
+		public void update(Input input) {
+			
+			this.x = input.getMouseX();
+			this.y = input.getMouseY();
+
+			if (input.isKeyPressed(TURN_LEFT)) {
+				this.turnDominoLeft();
+			}
+			if (input.isKeyPressed(TURN_RIGHT) || input.isMousePressed(input.MOUSE_RIGHT_BUTTON)) {
+				this.turnDminoRight();
+			}
 		}
 }

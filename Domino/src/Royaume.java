@@ -1,6 +1,6 @@
 import org.newdawn.slick.*;
 
-public class Royaume extends Joueur { // !! On a rajouté extends Joueur
+public class Royaume  { 
 	
 	private int type;
 	private int NbCouronne;

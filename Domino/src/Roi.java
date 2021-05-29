@@ -1,5 +1,9 @@
-import org.newdawn.slick.Color;
-import org.newdawn.slick.Image;
+import java.util.*;
+import java.io.*;
+import org.newdawn.slick.*;
+
+import org.newdawn.slick.*;
+
 
 public class Roi {
 	private int id;
@@ -83,5 +87,10 @@ public class Roi {
 		default:
 			return null;
 		}
+	}
+	public void render(Graphics graphics, float x, float y) {
+		// graphics.fillRect(this.x, this.y, 200, 200);
+		//graphics.drawImage(king, x, y,(int)(Game.dominoWidth),(int)(Game.dominoWidth), y, y, color());
+		roi.draw(x,y,Game.dominoWidth*1.5f,Game.dominoW idth*1.5f,color());
 	}
 }

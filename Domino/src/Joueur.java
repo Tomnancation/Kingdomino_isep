@@ -21,12 +21,28 @@ public class Joueur {
 	public static final int LAND_DIMENSION = 9;
 	public static final int MAX_DIMENSION = 5;
 	
+	public static final float RENDER_START_PT_X = Jeu.height * 0.15f;
+	public static final float RENDER_START_PT_Y = Jeu.height * 0.1f;
+	
 	// print in csv
 	int finalScore;
 	boolean chateauCenter ;
 	int totalCrownNum = 0;
 	int emptyAreaNum = 0;
 	int singleEmptyAreaNum = 0;
+	static int Joueur_ID = 1;
+	
+	public Joueur(String name, String CouleurRoi, int NumeroRoi) {
+		// TODO Auto-generated constructor stub
+		this.NomJoueur = name;
+		this.id = Joueur_ID;
+		this.land = intialiseLand();
+		this.CouleurRoi = CouleurRoi;
+		this.NumeroRoi = NumeroRoi;
+		this.joueurType = "Person";
+		Joueur_ID++;
+	}
+	
 	
 	//Getters
 	public String getNomJoueur() {
