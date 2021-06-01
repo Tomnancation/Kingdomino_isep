@@ -8,7 +8,7 @@ public class Domino {
 	private int x;
 	private int y;
 	
-	//On definit les attributs de domino présents aussi dans le fichier csv
+	//On definit les attributs de domino pr¨¦sents aussi dans le fichier csv
 	private int Nbcouronne1;
 	private int type1;
 	private int Nbcouronne2;
@@ -17,6 +17,7 @@ public class Domino {
 	
 	public int direction;
 	public boolean chosed;
+	
 	
 
 	// types
@@ -27,7 +28,14 @@ public class Domino {
 	public final static int MINE = Royaume.MINE;
 	public final static int MONTAGNE = Royaume.MONTAGNE;
 	
-	
+	// colors
+	public final static Color CHAMPS_COLOR = Royaume.CHAMPS_COLOR;
+	public final static Color FORET_COLOR = Royaume.FORET_COLOR;
+	public final static Color MER_COLOR = Royaume.MER_COLOR;
+	public final static Color PRAIRIE_COLOR = Royaume.PRAIRIE_COLOR;
+	public final static Color MINE_COLOR = Royaume.MINE_COLOR;
+	public final static Color MONTAGNE_COLOR = Royaume.MONTAGNE_COLOR;
+
 
 	// directions
 	public final static int D1 = 1;
@@ -43,11 +51,11 @@ public class Domino {
 	private final static int TURN_RIGHT = Jeu.DROITE;
 	
 	
-	// Constructeur pour définir iniatialement un domino
-	public Domino(int nbcouronne1, int type1, int nbcouronne2, int type2, int numDomino) {
-		this.Nbcouronne1 = nbcouronne1;
+	// Constructeur pour d¨¦finir iniatialement un domino
+	public Domino(int Nbcouronne1, int type1, int Nbcouronne2, int type2, int numDomino) {
+		this.Nbcouronne1 = Nbcouronne1;
 		this.type1 = type1;
-		this.Nbcouronne2 = nbcouronne2;
+		this.Nbcouronne2 = Nbcouronne2;
 		this.type2 = type2;
 		this.NumDomino = numDomino;
 		this.direction = D1;
@@ -56,6 +64,10 @@ public class Domino {
 		this.y = Jeu.height / 2;
 
 	}
+	
+	public static Image crown = Royaume.couronne;
+	
+	
 	
 	//Getters et Setters
 	public int getNbcouronne1() {
@@ -152,17 +164,17 @@ public class Domino {
 		} while (!over);
 
 	}
-	public void turnDminoRight() {
+	public void turnDminoDroite() {
 		direction = direction == D4 ? D1 : ++direction;
 	}
 
-	public void turnDominoLeft() {
+	public void turnDominoGauche() {
 		direction = direction == D1 ? D4 : --direction;
 	}
 	
 	// valid check
-		public static boolean crownNumValid(int crownNum) {
-			return 0 <= crownNum && crownNum <= 3;
+		public static boolean NbcouronneValid(int Nbcouronne) {
+			return 0 <= Nbcouronne && Nbcouronne <= 3;
 		}
 
 		public static boolean typeValid(int type) {
@@ -174,7 +186,7 @@ public class Domino {
 		}
 
 		public boolean dominoValid() {
-			return typeValid(type1) || typeValid(type2) || crownNumValid(Nbcouronne1) || crownNumValid(Nbcouronne2)
+			return typeValid(type1) || typeValid(type2) || NbcouronneValid(Nbcouronne1) || NbcouronneValid(Nbcouronne2)
 					|| dominoNumValid(NumDomino);
 		}
 
@@ -189,6 +201,78 @@ public class Domino {
 			System.out.println("Type 2 : " + typeToString(type2));
 			System.out.println("crown number 2 : " + Nbcouronne2);
 			System.out.println();
+		}
+		
+		public void renderFixed(Graphics graphics, float x, float y) throws SlickException {
+
+			graphics.setColor(Jeu.ALTERNATIVE_MESSAGE);
+			graphics.drawString("No." + String.valueOf(NumDomino), x, y - Jeu.dominoWidth * 0.5f);
+			typeToImage(type1).draw(x, y, Jeu.dominoWidth, Jeu.dominoWidth);
+			graphics.setColor(Jeu.MESSAGE_COLOR);
+			graphics.drawString(String.valueOf(Nbcouronne1), x + Jeu.dominoWidth / 2, y + Jeu.dominoWidth / 2);
+
+			
+			typeToImage(type2).draw(x + Jeu.dominoWidth, y, Jeu.dominoWidth, Jeu.dominoWidth);
+			graphics.setColor(Jeu.MESSAGE_COLOR);
+			graphics.drawString(String.valueOf(Nbcouronne2), x + 3 * Jeu.dominoWidth / 2, y + Jeu.dominoWidth / 2);
+
+		}
+		
+		public void render(Graphics graphics) throws SlickException {
+
+			typeToImage(type1).draw(x, y, Jeu.dominoWidth, Jeu.dominoWidth);
+			graphics.setColor(Jeu.MESSAGE_COLOR);
+			graphics.drawString(String.valueOf(Nbcouronne1), x + Jeu.dominoWidth / 2, y + Jeu.dominoWidth / 2);
+
+			switch (direction) {
+			case D1:
+				
+				typeToImage(type2).draw(x + Jeu.dominoWidth, y, Jeu.dominoWidth, Jeu.dominoWidth);
+				graphics.setColor(Jeu.MESSAGE_COLOR);
+				graphics.drawString(String.valueOf(Nbcouronne2), x + 3 * Jeu.dominoWidth / 2, y + Jeu.dominoWidth / 2);
+				break;
+
+			case D2:
+				typeToImage(type2).draw(x, y + Jeu.dominoWidth, Jeu.dominoWidth, Jeu.dominoWidth);
+				graphics.setColor(Jeu.MESSAGE_COLOR);
+				graphics.drawString(String.valueOf(Nbcouronne2), x + Jeu.dominoWidth / 2, y + 3 * Jeu.dominoWidth / 2);
+				break;
+
+			case D3:
+				
+				typeToImage(type2).draw(x - Jeu.dominoWidth, y, Jeu.dominoWidth, Jeu.dominoWidth);
+				graphics.setColor(Jeu.MESSAGE_COLOR);
+				graphics.drawString(String.valueOf(Nbcouronne2), x - Jeu.dominoWidth / 2, y + Jeu.dominoWidth / 2);
+				break;
+
+			case D4:
+				
+				typeToImage(type2).draw(x, y - Jeu.dominoWidth, Jeu.dominoWidth, Jeu.dominoWidth);
+				graphics.setColor(Jeu.MESSAGE_COLOR);
+				graphics.drawString(String.valueOf(Nbcouronne2), x + Jeu.dominoWidth / 2, y - Jeu.dominoWidth / 2);
+				break;
+
+			}
+		}
+		
+		public static Color typeToColor(int type) {
+			switch (type) {
+			case CHAMPS:
+				return CHAMPS_COLOR;
+			case FORET:
+				return FORET_COLOR;
+			case MER:
+				return MER_COLOR;
+			case PRAIRIE:
+				return PRAIRIE_COLOR;
+			case MINE:
+				return MINE_COLOR;
+			case MONTAGNE:
+				return MONTAGNE_COLOR;
+			default:
+				return null;
+
+			}
 		}
 		
 		public static Image typeToImage(int type) throws SlickException {
@@ -217,10 +301,14 @@ public class Domino {
 			this.y = input.getMouseY();
 
 			if (input.isKeyPressed(TURN_LEFT)) {
-				this.turnDominoLeft();
+				this.turnDominoGauche();
 			}
 			if (input.isKeyPressed(TURN_RIGHT) || input.isMousePressed(input.MOUSE_RIGHT_BUTTON)) {
-				this.turnDminoRight();
+				this.turnDminoDroite();
 			}
+		}
+		
+		public static void main(String[] args) throws FileNotFoundException {
+
 		}
 }

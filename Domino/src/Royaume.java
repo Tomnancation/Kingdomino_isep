@@ -29,6 +29,17 @@ public class Royaume  {
 	public final static int MINE = 5;
 	public final static int MONTAGNE = 6;
 	public final static int CHATEAU = 100;
+	
+	// colors
+	public final static Color CHAMPS_COLOR = Color.yellow;
+	public final static Color FORET_COLOR = new Color(0, 100, 0);// darkgreen
+	public final static Color MER_COLOR = Color.cyan;
+	public final static Color PRAIRIE_COLOR = new Color(173, 255, 47); // greenyellow
+	public final static Color MINE_COLOR = Color.gray;
+	public final static Color MONTAGNE_COLOR = new Color(165, 42, 42); // brown
+	public final static Color CASTLE_COLOR = Color.white;
+	public final static Color EMPTY_COLOR = new Color(25, 25, 112);
+
 
 	// Getters and setters
 	public int getType() {
@@ -55,27 +66,30 @@ public class Royaume  {
 		estOccupe = stat;
 	}
 	
-	// methode qui retourne le nom du type
-	public static String typeToString(int type) {
+	
+	public Color typeToColor() {
 		switch (type) {
 		case CHAMPS:
-			return "Champs";
+			return CHAMPS_COLOR;
 		case FORET:
-			return "Foret";
+			return FORET_COLOR;
 		case MER:
-			return "Mer";
+			return MER_COLOR;
 		case PRAIRIE:
-			return "Prairie";
+			return PRAIRIE_COLOR;
 		case MINE:
-			return "Mine";
+			return MINE_COLOR;
 		case MONTAGNE:
-			return "Montagne";
+			return MONTAGNE_COLOR;
 		case CHATEAU:
-			return "Chateau";
+			return CASTLE_COLOR;
 		default:
-			return null;
+			return EMPTY_COLOR;
+
 		}
 	}
+	
+	
 	
 	//methode to string qui retourne la valeur de chaque type
 	public static int typeToInt(String type) {
@@ -123,7 +137,52 @@ public class Royaume  {
 		}
 	}
 	
+	public static String typeToString(int type) {
+		switch (type) {
+		case CHAMPS:
+			return "Champs";
+		case FORET:
+			return "Foret";
+		case MER:
+			return "Mer";
+		case PRAIRIE:
+			return "Prairie";
+		case MINE:
+			return "Mine";
+		case MONTAGNE:
+			return "Montagne";
+		case CHATEAU:
+			return "Castle";
+		default:
+			return null;
+
+		}
+	}
+	public void render(Graphics graphics, float x, float y) {
+		// graphics.setColor(typeToColor());
+		// graphics.fillRect(x, y, Jeu.dominoWidth, Jeu.dominoWidth);
+		try {
+			typeToImage().draw(x, y, Jeu.dominoWidth, Jeu.dominoWidth);
+		} catch (SlickException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (NbCouronne != 0) {
+			graphics.setColor(Color.white);
+			graphics.drawString(String.valueOf(NbCouronne), x + Jeu.dominoWidth / 2, y + Jeu.dominoWidth / 2);
+		}
+
+	}
 	
+	public void renderMini(Graphics graphics, float x, float y) {
+		graphics.setColor(typeToColor());
+		graphics.fillRect(x, y, Jeu.dominoWidth * 0.2f, Jeu.dominoWidth * 0.2f);
+		// graphics.drawString(String.valueOf(crownNum1), x + Game.dominoWidth / 2, y +
+		// Game.dominoWidth / 2);
+	}
+	
+	
+
 	//
 	
 	

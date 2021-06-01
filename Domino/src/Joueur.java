@@ -3,7 +3,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
-
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 
@@ -356,6 +356,65 @@ public class Joueur {
 			}
 		}
 		return score;
+	}
+	
+	public void render(Graphics graphics) {
+		this.renderAreaInLand(graphics);
+		this.renderInfo(graphics, Jeu.ALTERNATIVE_MESSAGE);
+	}
+	
+	public void renderAreaInLand(Graphics graphics) {
+		float x = RENDER_START_PT_X;
+		float y = RENDER_START_PT_Y;
+
+		for (int i = 0; i < LAND_DIMENSION; i++) {
+			for (int j = 0; j < LAND_DIMENSION; j++) {
+
+				int xij = (int) x + j * Jeu.dominoWidth;
+				int yij = (int) y + i * Jeu.dominoWidth;
+
+				land[i][j].render(graphics, xij, yij);
+
+			}
+		}
+	}
+	
+	public void renderInfo(Graphics graphics, Color color) {
+		float x = Jeu.width * 0.75f;
+		float y = Jeu.height * 0.2f;
+		float d = Jeu.width * 0.015f;
+		// String str = "Player No." + id + "\r\n" + "Player name : " + playerName +
+		// "\r\n" + "King color : " + kingColor;
+
+		graphics.setColor(color);
+		// graphics.drawString("Round : " + Game.ROUND, x, y);
+		graphics.drawString("Player No." + id, x, y + d);
+		graphics.drawString("Player name : " + NomJoueur, x, y + 2 * d);
+		graphics.drawString("King color : " + CouleurRoi, x, y + 3 * d);
+		renderKings(graphics, x, y + 10 * d);
+
+	}
+	
+	public void renderLandMini(Graphics graphics, float x, float y) {
+		for (int i = 0; i < LAND_DIMENSION; i++) {
+			for (int j = 0; j < LAND_DIMENSION; j++) {
+
+				int xij = (int) (x + j * Jeu.dominoWidth * 0.2);
+				int yij = (int) (y + i * Jeu.dominoWidth * 0.2);
+
+				land[i][j].renderMini(graphics, xij, yij);
+
+			}
+		}
+	}
+	
+	public void renderKings(Graphics graphics, float x, float y) {
+		float d = Jeu.width * 0.1f;
+		int i = 0;
+		for (Roi k : rois) {
+			k.render(graphics, x + i * d, y);
+			i++;
+		}
 	}
 	
 	public void findRoyaume(Location location, int[][] crownNum) {
