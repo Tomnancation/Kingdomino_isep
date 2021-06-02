@@ -1,10 +1,5 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Console {
 	public static int NumeroJoueur;
@@ -12,6 +7,8 @@ public class Console {
 	public static int tour=1;
 	public static List<Joueur> joueurList = new ArrayList<>();
 	public static int maxTour;
+	
+	public static List<Integer> playerOrder;
 	
 	public static List<Domino> dominoList;
 	static List<Domino> dominoListDraw;
@@ -28,9 +25,24 @@ public class Console {
 	
 	// On fixe le nombre de joueurs entre 2 et 4
 	// !!
-	public static boolean numJoueurOK(int playerN) {
-		return 2 <= playerN && playerN <= 4;
+	public static boolean numJoueurOK(int joueurN) {
+	return 2 <= joueurN && joueurN <= 4;
 	}
+	
+	// Valid check
+		public static boolean playerNumValid(int joueurN) {
+			return 2 <= joueurN && joueurN <= 4;
+		}
+
+		public static boolean isPositionValid(int x) {
+			return 0 <= x && x <= 8;
+		}
+		public static boolean gameOver() {
+
+			return (tour <= maxTour) ? false : true;
+
+		}
+		
 	
 	//methode dans le cas ou le joueur ne va pas saisir un entier on lui affiche une erreur
 	public static int saisirInt() {
@@ -166,6 +178,59 @@ public class Console {
 
 	}
 	
+	public static void inisialisation() {
+		// initialiser
+		dominoList = loadDominos("dominos.csv"); // dominos.csv
+		Collections.shuffle(dominoList);
+
+	}
+//	public static List configOrdreJoueur() {
+//		List tempList = new ArrayList<Joueur>();
+//		for (Roi k : roiList) {
+//			for (Roi p : roiList) {
+//				if (k.getCouleur() == p.getCouleurRoi()) { //problemmm
+//					tempList.add(p.getId());
+//				}
+//			}
+//		}
+//		return tempList;
+//	}
+	
+	public static void printPlayerInfo(Joueur p) {
+		System.out.println("Player No." + p.getId());
+		System.out.println("Player name : " + p.getNomJoueur());
+		System.out.println("King number : " + p.getNumeroRoi());
+		System.out.println("King color : " + p.getCouleurRoi());
+		System.out.println("Player type : " + p.getJoueurType());
+
+		printKingList(p.getRois());
+		p.printLand();
+		System.out.println();
+	}
+	
+	public static void printJoueurList(List l) {
+		Iterator<Joueur> iterator = l.iterator();
+		while (iterator.hasNext()) {
+			printPlayerInfo(iterator.next());
+		}
+	}
+	public static void playersInit() {
+		// player inisialisation
+		// playerNum = inputPlayerNum();
+		NumeroJoueur = 2;
+		creatPlayers2();
+		printJoueurList(joueurList);
+		NumeroRoi = (NumeroJoueur == 2 || NumeroJoueur == 4) ? 4 : 3;
+		maxTour = (NumeroJoueur == 2) ? 7 : 13;
+
+		System.out.println("nombre de rois : " + NumeroRoi);
+		System.out.println("___________________________________________________");
+		dominoList = configDominoList();
+
+	}
+
+	
+	
 	public static List configDominoList() {
 		List<Domino> tempList = new ArrayList<Domino>();
 		tempList = dominoList.subList(0, NumeroJoueur * 12);
@@ -205,7 +270,27 @@ public class Console {
 		return dominoTempList;
 	}
 	
-	public static void round() {
+	public static void printKingToDomino() {
+		Set keys = RoiToDomino.keySet();
+		Iterator<Roi> kings = keys.iterator();
+		while (kings.hasNext()) {
+			Roi king = kings.next();
+			Domino d = RoiToDomino.get(king);
+			printRoiInfo(king);
+			printDominoInfo2(d);
+
+		}
+	}
+	
+	public static void printRoiList(List<Roi> l) {
+		Iterator<Roi> iterator = l.iterator();
+		while (iterator.hasNext()) {
+			printRoiInfo(iterator.next());
+		}
+		System.out.println("Nombre de rois : " + l.size());
+	}
+	
+	public static void tour() {
 
 		System.out.println("Round : " + tour);
 
@@ -283,4 +368,226 @@ public class Console {
 		}
 	
 	}
+	public static void creatPlayers() {
+		ArrayList<String> listColor = new ArrayList<String>(Arrays.asList("red", "yellow", "green", "pink"));
+		Joueur p;
+		// Collections.shuffle(listColor);
+		System.out.println(listColor);
+		int kingPerPlayer = NumeroJoueur == 2 ? 2 : 1;
+		System.out.println("Nombre de joueur : " + NumeroJoueur);
+		for (int i = 1; i <= NumeroJoueur; i++) {
+			System.out.println("Saisissez le nom du joueur No." + i);
+			String name = inputString();
+			name = name.isEmpty() ? "Player" + Integer.toString(i) : name;
+			if (name.equals("AI")) {
+				p = new AI(name, listColor.get(i - 1), kingPerPlayer);
+			} else {
+				p = new Joueur(name, listColor.get(i - 1), kingPerPlayer);
+			}
+
+			for (int j = 0; j < kingPerPlayer; j++) {
+				Roi k = new Roi(listColor.get(i - 1));
+				roiList.add(k);
+				p.getRois().add(k);
+			}
+			joueurList.add(p);
+		}
+	}
+	
+	public static void creatPlayers2() {
+		ArrayList<String> listColor = new ArrayList<String>(Arrays.asList("red", "yellow", "green", "pink"));
+		Joueur p;
+		// Collections.shuffle(listColor);
+		System.out.println(listColor);
+		int kingPerPlayer = NumeroJoueur== 2 ? 2 : 1;
+		System.out.println("Nombre de joueur : " + NumeroJoueur);
+		for (int i = 1; i <= NumeroJoueur; i++) {
+			p = new AI("AI", listColor.get(i - 1), kingPerPlayer);
+
+			for (int j = 0; j < kingPerPlayer; j++) {
+				Roi k = new Roi(listColor.get(i - 1));
+				roiList.add(k);
+				p.getRois().add(k);
+			}
+			joueurList.add(p);
+		}
+	}
+	
+	public static List<Domino> loadDominos(String filePath) {
+		List<Domino> dominoList = new ArrayList<Domino>();
+		Scanner scanner;
+		int NbCouronne1, type1, NbCouronne2, type2, NumDomino;
+		boolean loadSuccessful = false;
+		do {
+			try {
+				File file = new File(filePath);
+				scanner = new Scanner(file);
+				scanner.useDelimiter(",|\n|\r");
+
+				for (int i = 0; i <= 4; i++) { // header
+					scanner.next();
+				}
+
+				// load dominos in dominoList
+				for (int i = 0; i < 48; i++) {
+					System.out.println(scanner.next());
+
+					NbCouronne1 = Integer.parseInt(scanner.next());
+					type1 = Domino.typeToInt(scanner.next());
+					NbCouronne2 = Integer.parseInt(scanner.next());
+					type2 = Domino.typeToInt(scanner.next());
+					NumDomino = Integer.parseInt(scanner.next());
+
+					Domino d = new Domino(NbCouronne1, type1, NbCouronne1, type2, NumDomino);
+
+					if (d.dominoValid())
+						dominoList.add(d);
+
+				}
+				loadSuccessful = true;
+				scanner.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				System.out.println("Erreur lors du chargement du fichier dominos.csv");
+				System.out.println("Verifiez que le fichier est bien a l'enplacement : " + filePath);
+				System.out.println("Ou saisissez l'emplacement manuelment :");
+				Scanner scan = new Scanner(System.in);
+				String path = scan.nextLine();
+				filePath = path.isEmpty() ? filePath : path;
+			}
+		} while (!loadSuccessful);
+		return dominoList;
+	}
+	
+	public static void round() {
+
+		System.out.println("Round : " + tour);
+
+		if (tour != maxTour) {
+			dominoListDraw = drawDominos();
+			// printDominoList(dominoListDraw);
+			System.out.println("___________________________________________________");
+			dominoListDraw = sortDominoByNum(dominoListDraw);
+			// printDominoList(dominoListDraw);
+		}
+		System.out.println("___________________________________________________");
+		List dominoTempList = dupliqueDominoList(dominoListDraw);
+
+		Map tempKingToDomino = new LinkedHashMap<Roi, Domino>();
+
+		if (tour == 1) {
+			Collections.shuffle(roiList);
+			for (Roi k : roiList) {
+				Joueur p = getJoueurByRoi(k);
+				tempKingToDomino.put(k, k.draw()); // choose domino
+			}
+		}
+
+		System.out.println("___________________________________________________");
+		System.out.println("L'ordre de ce tour : ");
+		printKingList(roiList);
+		System.out.println("___________________________________________________");
+
+		System.out.println("___________________________________________________");
+
+		for (Roi k : roiList) {
+			Joueur p = getJoueurByRoi(k);
+			// printPlayerInfo(p);
+			if (tour != 1) {
+
+				if (tour < maxTour) {
+					tempKingToDomino.put(k, k.draw()); // choose domino
+				}
+
+				// place domino
+				Domino domino = RoiToDomino.get(k);
+
+				if (p.joueurType.equals("Person")) {
+					int x, y;
+					boolean putOk = false;
+					do {
+						do {
+							p.printLand();
+							domino.printDominoInfo();
+							domino.setDirection(Domino.D1);
+							p.detectPositions(domino);
+							domino.setDirection(Domino.D1);
+							domino.turnDomino();
+							x = saisirPosition();
+							y = saisirPosition();
+						} while (p.isLandOccupied(domino, x, y) || !p.isPlaceOk(domino, x, y));
+						p.placeDomino(domino, x, y);
+						if (!p.isDimensionOk()) {
+							p.removeDominoFromLand(domino, x, y);
+							System.out.println("Dimension out of bounds !");
+						} else {
+							putOk = true;
+							p.printLand();
+							System.out.println("Current score of player " + p.getId() + " is " + p.calculateScore());
+
+						}
+					} while (!putOk);
+
+				} else {
+					System.out.println("AI's turn !");
+					p.place(domino);
+				}
+
+			}
+		}
+
+		RoiToDomino = tempKingToDomino;
+
+		System.out.println("___________________________________________________");
+		printKingToDomino();
+		System.out.println("___________________________________________________");
+		roiList = configRoiListForNextTurn(dominoTempList);
+
+		tour++;
+	}
+
+	public static void main(String[] args) {
+
+		// initialisation
+		for (int i = 0; i < 2000; i++) {
+			inisialisation();
+			System.out.println("___________________________________________________");
+			System.out.println("___________________________________________________");
+			// creat players
+			playersInit();
+			System.out.println("___________________________________________________");
+			System.out.println("___________________________________________________");
+			// round
+			while (!gameOver()) {
+				round();
+			}
+
+			System.out.println("GAME OVER");
+			for (Joueur p : joueurList) {
+				int finalScore = p.finalScore();
+				p.printLand();
+				System.out.println("Final score of player " + p.getId() + " is " + finalScore);
+				System.out.println(p.finalScore + "," + p.chateauCenter + "," + p.emptyAreaNum + ","
+						+ p.singleEmptyAreaNum + "," + p.totalCrownNum + "\n");
+				try {
+					p.printResultInCsv();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+
+			System.out.println("___________________________________________________");
+			tour = 1;
+			joueurList.removeAll(joueurList);
+			dominoList.removeAll(dominoList);
+			dominoListDraw.removeAll(dominoListDraw);
+			roiList.removeAll(roiList);
+			RoiToDomino.clear();
+		}
+	}
+
 }
+
+

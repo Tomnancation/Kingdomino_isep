@@ -530,13 +530,13 @@ public  class Jeu extends BasicGame {
 					name = textField.getText();
 					name = name.isEmpty() ? "Joueur" + Integer.toString(createdJoueur + 1) : name;
 					Joueur p;
-//					new Joueur(name, listColor.get(createdJoueur), RoiPerJoueur);
-//
-//					if (name.equals("AI")) {
-//						p = new AI(name, listColor.get(createdJoueur), RoiPerJoueur);
-//					} else {
-//						p = new Joueur(name, listColor.get(createdJoueur), RoiPerJoueur);
-//					}
+					new Joueur(name, listColor.get(createdJoueur), RoiPerJoueur);
+
+					if (name.equals("AI")) {
+						p = new AI(name, listColor.get(createdJoueur), RoiPerJoueur);
+					} else {
+						p = new Joueur(name, listColor.get(createdJoueur), RoiPerJoueur);
+					}
 					for (int j = 0; j < RoiPerJoueur; j++) {
 						Roi k = new Roi(listColor.get(createdJoueur));
 						RoiList.add(k);
@@ -639,22 +639,22 @@ public  class Jeu extends BasicGame {
 				if (!dominoListDraw.isEmpty()) {
 					if (Jeu.tour == 1) {
 
-						//int index = currentJoueur.chooseBestDominoTurn1(dominoListDraw);
-						//Domino d = dominoListDraw.get(index);
-						//tempRoiToDomino.put(currentRoi, d);
-						//dominoListDraw.remove(index);
+						int index = currentJoueur.chooseBestDominoTurn1(dominoListDraw);
+						Domino d = dominoListDraw.get(index);
+						tempRoiToDomino.put(currentRoi, d);
+						dominoListDraw.remove(index);
 						RoiChoseDomino++;
 
 					} else {
 
-						//Domino pre = RoiToDomino.get(currentRoi);
-						//int bestX = currentJoueur.bestPosition(pre)[1];
-						//int bestY = currentJoueur.bestPosition(pre)[2];
-						//int bestDirection = currentJoueur.bestPosition(pre)[3];
-						//int index = currentJoueur.chooseBestDomino(pre, bestX, bestY, bestDirection, dominoListDraw);
-						//Domino d = dominoListDraw.get(index);
-						//tempRoiToDomino.put(currentRoi, d);
-						//dominoListDraw.remove(d);
+						Domino pre = RoiToDomino.get(currentRoi);
+						int bestX = currentJoueur.bestPosition(pre)[1];
+						int bestY = currentJoueur.bestPosition(pre)[2];
+						int bestDirection = currentJoueur.bestPosition(pre)[3];
+						int index = currentJoueur.chooseBestDomino(pre, bestX, bestY, bestDirection, dominoListDraw);
+						Domino d = dominoListDraw.get(index);
+						tempRoiToDomino.put(currentRoi, d);
+						dominoListDraw.remove(d);
 						RoiChoseDomino++;
 
 					}

@@ -1,10 +1,11 @@
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 
 
 public class Joueur {
@@ -24,13 +25,19 @@ public class Joueur {
 	public static final float RENDER_START_PT_X = Jeu.height * 0.15f;
 	public static final float RENDER_START_PT_Y = Jeu.height * 0.1f;
 	
+	static int Joueur_ID = 1;
 	// print in csv
+	
 	int finalScore;
 	boolean chateauCenter ;
 	int totalCrownNum = 0;
 	int emptyAreaNum = 0;
 	int singleEmptyAreaNum = 0;
-	static int Joueur_ID = 1;
+	
+	public Joueur() {
+
+	}
+
 	
 	public Joueur(String name, String CouleurRoi, int NumeroRoi) {
 		// TODO Auto-generated constructor stub
@@ -65,6 +72,19 @@ public class Joueur {
 		return rois;
 	}
 	
+	public String getJoueurType() {
+		return joueurType;
+	}
+
+	public void setPlayerType(String playerType) {
+		this.joueurType = playerType;
+	}
+
+	
+	public void setName(String name) {
+		NomJoueur = name;
+	}
+	
 	public static Royaume[][] intialiseLand() {
 		Royaume[][] royaume = new Royaume[LAND_DIMENSION][LAND_DIMENSION];
 		for (int i = 0; i != royaume.length; i++) {
@@ -75,6 +95,20 @@ public class Joueur {
 		return royaume;
 	}
 	
+	public static int colorToId(String kingColor) {
+		switch (kingColor) {
+		case "red":
+			return 1;
+		case "yellow":
+			return 3;
+		case "blue":
+			return 5;
+		case "pink":
+			return 7;
+		default:
+			return -1;
+		}
+	}
 	public void printLand() {
 		for (int i = 0; i != land.length; i++) {
 			for (int j = 0; j != land[i].length; j++) {
@@ -83,6 +117,23 @@ public class Joueur {
 			System.out.println();
 		}
 	}
+	
+	public static boolean lengthValid(List l) {
+		return l.size() <= 5;
+	}
+	
+	public boolean landValid() {
+		for (int i = 0; i != land.length; i++) {
+			for (int j = 0; j != land[i].length; j++) {
+				if (land[i][j].estOccupe())
+					;
+			}
+			System.out.println();
+
+		}
+		return false;
+	}
+
 	
 	public boolean isLandOccupied(Domino d, int x, int y) {
 		switch (d.getDirection()) {
@@ -327,6 +378,30 @@ public class Joueur {
 		}
 	}
 	
+	public int[] get1stDominoPostion() {
+		int[] position = new int[2];
+		for (int i = 0; i != land.length; i++) {
+			for (int j = 0; j != land[i].length; j++) {
+				if (land[i][j].estOccupe()) {
+					position[1] = i;
+					position[2] = j;
+				}
+			}
+		}
+		return position;
+	}
+	
+	public Royaume[][] land5x5() {
+		Royaume[][] tempArea = new Royaume[MAX_DIMENSION][MAX_DIMENSION];
+		int[] position = get1stDominoPostion();
+		for (int i = position[0]; i < MAX_DIMENSION; i++) {
+			for (int j = position[1]; j < MAX_DIMENSION; j++) {
+				tempArea[i - position[0]][j - position[0]] = land[i][j];
+			}
+		}
+		return tempArea;
+	}
+	
 	public void place(Domino domino) {
 
 	}
@@ -391,7 +466,7 @@ public class Joueur {
 		graphics.drawString("Player No." + id, x, y + d);
 		graphics.drawString("Player name : " + NomJoueur, x, y + 2 * d);
 		graphics.drawString("King color : " + CouleurRoi, x, y + 3 * d);
-		renderKings(graphics, x, y + 10 * d);
+		renderRois(graphics, x, y + 10 * d);
 
 	}
 	
@@ -408,13 +483,22 @@ public class Joueur {
 		}
 	}
 	
-	public void renderKings(Graphics graphics, float x, float y) {
+	public void renderRois(Graphics graphics, float x, float y) {
 		float d = Jeu.width * 0.1f;
 		int i = 0;
 		for (Roi k : rois) {
 			k.render(graphics, x + i * d, y);
 			i++;
 		}
+	}
+	
+	public void renderLand(Graphics graphics) {
+		graphics.setColor(Color.white);
+		float y = RENDER_START_PT_Y;
+		float width, height;
+		width = height = y + (LAND_DIMENSION - 1) * Jeu.dominoWidth;
+		graphics.fillRect(y, y, width, height);
+		renderAreaInLand(graphics);
 	}
 	
 	public void findRoyaume(Location location, int[][] crownNum) {
@@ -556,6 +640,30 @@ public class Joueur {
 		emptyAreaNum = tmpEmptyAreaNum;
 		singleEmptyAreaNum = tmpSingleEmptyAreaNum;
 	}
+	
+	public void checkLand(int borderTop, int borderLeft) {
+		//System.out.println((borderTop + MAX_DIMENSION) + " " + (borderLeft + MAX_DIMENSION));
+		int tmpEmptyAreaNum = 0;
+		int tmpSingleEmptyAreaNum = 0;
+		
+		for (int i = borderTop; i != borderTop + MAX_DIMENSION; i++) {
+			for (int j = borderLeft; j != borderLeft + MAX_DIMENSION; j++) {
+				if (!land[i][j].estOccupe()) {
+					tmpEmptyAreaNum++;
+
+					if (isEmptyAreaSingle(i, j, borderTop, borderLeft)) {
+						tmpSingleEmptyAreaNum++;
+						//System.out.println(i + " " + j);
+					}
+
+				} else {
+					totalCrownNum += land[i][j].getNbCouronne();
+				}
+			}
+		}
+		emptyAreaNum = tmpEmptyAreaNum;
+		singleEmptyAreaNum = tmpSingleEmptyAreaNum;
+	}
 	public boolean isEmptyAreaSingle(int i, int j, int borderTop, int borderLeft) {
 		if (i == borderTop && j == borderLeft) {
 			return land[i + 1][j].estOccupe() && land[i][j + 1].estOccupe();
@@ -579,6 +687,33 @@ public class Joueur {
 		}
 
 	}
+	public int chooseBestDominoTurn1(List<Domino> dominoList) {
+		return 0;
+	}
 
-	
+	public int chooseBestDomino(Domino preDomino, int preX, int preY, int preDirection, List<Domino> dominoList) {
+		return 0;
+	}
+	public int[] bestPosition(Domino domino) {
+		int[] returnArray = new int[4];
+
+		return returnArray;
+	}
+	public void printResultInCsv() throws IOException {
+
+		FileWriter fw = null;
+
+		try {
+			fw = new FileWriter(new File("results.csv"), true);
+			fw.append(finalScore + "," + chateauCenter + "," + emptyAreaNum + "," + singleEmptyAreaNum + ","
+					+ totalCrownNum + "\n");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+
+			fw.close();
+		}
+
+	}
 }
