@@ -11,6 +11,10 @@ public class Roi {
 	static int ID_Roi = 1;
 	
 	public static Image roi;
+	
+	public Roi() {
+
+	}
 
 	//Constructeur
 	
@@ -51,21 +55,23 @@ public class Roi {
 					// e.printStackTrace();
 				}
 			} while (!dominoOk);
-		} // else { // AI
-			// if (Console.round == 1) {
-				// int n = Console.getPlayerByKing(this).chooseBestDominoTurn1(Console.dominoListDraw);
-				// d = Console.dominoListDraw.get(n);
-				// Console.dominoListDraw.remove(d);
-			// } else {
-				//System.out.println("other rounds");
-				//Domino pre = Console.RoiToDomino.get(this);
-				//int x = Console.getPlayerByKing(this).bestPosition(pre)[1];
-				//int y = Console.getPlayerByKing(this).bestPosition(pre)[2];
-				//int direction = Console.getPlayerByKing(this).bestPosition(pre)[3];
-				//int n = Console.getPlayerByKing(this).chooseBestDomino(pre, x, y, direction, Console.dominoListDraw);
-				//d = Console.dominoListDraw.get(n);
-				//Console.dominoListDraw.remove(d);
-				//System.out.println("AI chose the domino " + d.getNumDomino());
+		}  else { // AI
+			 if (Console.tour == 1) {
+				 int n = Console.getJoueurByRoi(this).chooseBestDominoTurn1(Console.dominoListDraw);
+				 d = Console.dominoListDraw.get(n);
+				 Console.dominoListDraw.remove(d);
+			 } else {
+				System.out.println("other rounds");
+				Domino pre = Console.RoiToDomino.get(this);
+				int x = Console.getJoueurByRoi(this).bestPosition(pre)[1];
+				int y = Console.getJoueurByRoi(this).bestPosition(pre)[2];
+				int direction = Console.getJoueurByRoi(this).bestPosition(pre)[3];
+				int n = Console.getJoueurByRoi(this).chooseBestDomino(pre, x, y, direction, Console.dominoListDraw);
+				d = Console.dominoListDraw.get(n);
+				Console.dominoListDraw.remove(d);
+				System.out.println("AI chose the domino " + d.getNumDomino());
+			 }
+		}
 		return d;
 
 			//}

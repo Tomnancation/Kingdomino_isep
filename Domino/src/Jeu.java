@@ -444,25 +444,25 @@ public  class Jeu extends BasicGame {
 		//printDominoList(dominoList);
 		
 		// chargement des images
-		Roi.roi = new Image("roi.png");
+		Roi.roi = new Image("Ressources/roi.png");
 
-		Domino.couronne = new Image("Crown2.png");
+		Domino.couronne = new Image("Ressources/Crown2.png");
 
-		CHAMPS_IMAGE = new Image("champs.png");
-		FORET_IMAGE = new Image("foret.png");
-		MER_IMAGE = new Image("mer.png");
-		MINE_IMAGE = new Image("mines.png");
-		MONTAGNE_IMAGE = new Image("montagne.png");
-		PRAIRIE_IMAGE = new Image("prairie.png");
-		CHATEAU_IMAGE = new Image("chateau.jpg");
-		EMPTY_IMAGE = new Image("empty.jpg");
+		CHAMPS_IMAGE = new Image("Ressources/champs.png");
+		FORET_IMAGE = new Image("Ressources/foret.png");
+		MER_IMAGE = new Image("Ressources/mer.png");
+		MINE_IMAGE = new Image("Ressources/mines.png");
+		MONTAGNE_IMAGE = new Image("Ressources/montagne.png");
+		PRAIRIE_IMAGE = new Image("Ressources/prairie.png");
+		CHATEAU_IMAGE = new Image("Ressources/chateau.jpg");
+		EMPTY_IMAGE = new Image("Ressources/empty.jpg");
 		Image backgtour; 
 		Image mainScreen; 
 		Image panel;
 
-		backgtour = new Image("board2.png");
-		panel = new Image("yangpizhi.png");
-		mainScreen = new Image("main.jpg");
+		backgtour = new Image("Ressources/board2.png");
+		panel = new Image("Ressources/yangpizhi.png");
+		mainScreen = new Image("Ressources/main.jpg");
 		
 		font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF, java.awt.Font.BOLD, (int) (height * 0.025)),
 				false);
