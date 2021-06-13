@@ -76,25 +76,25 @@ public class Joueur {
 		return joueurType;
 	}
 
-	public void setPlayerType(String playerType) {
-		this.joueurType = playerType;
+	public void setJoueurType(String joueurType) {
+		this.joueurType = joueurType;
 	}
 
 	
 	public void setName(String name) {
 		NomJoueur = name;
 	}
-	
-	public static Royaume[][] intialiseLand() {
-		Royaume[][] royaume = new Royaume[LAND_DIMENSION][LAND_DIMENSION];
+	// On initialise le royaume de chaque joueur
+	public static Royaume[][] intialiseLand() { 
+		Royaume[][] royaume = new Royaume[LAND_DIMENSION][LAND_DIMENSION]; // on créer un royaume
 		for (int i = 0; i != royaume.length; i++) {
 			for (int j = 0; j != royaume[i].length; j++) {
 				royaume[i][j] = (i == LAND_DIMENSION / 2 && j == LAND_DIMENSION / 2) ? new Royaume(Royaume.CHATEAU) : new Royaume();
-			}
+			} // on attribue des coordonées a chaque case du royaume
 		}
 		return royaume;
 	}
-	
+	// on attribue a chaque couleur de roi un Id
 	public static int colorToId(String kingColor) {
 		switch (kingColor) {
 		case "red":
@@ -109,6 +109,8 @@ public class Joueur {
 			return -1;
 		}
 	}
+	
+	// méthode que l'on va utiliser pour mettre a jour le royaume apres chaque changement
 	public void printLand() {
 		for (int i = 0; i != land.length; i++) {
 			for (int j = 0; j != land[i].length; j++) {
@@ -117,24 +119,8 @@ public class Joueur {
 			System.out.println();
 		}
 	}
-	
-	public static boolean lengthValid(List l) {
-		return l.size() <= 5;
-	}
-	
-	public boolean landValid() {
-		for (int i = 0; i != land.length; i++) {
-			for (int j = 0; j != land[i].length; j++) {
-				if (land[i][j].estOccupe())
-					;
-			}
-			System.out.println();
 
-		}
-		return false;
-	}
-
-	
+	// Avant de Placer un Domino on doit verifier que l'emplacement est libre
 	public boolean isLandOccupied(Domino d, int x, int y) {
 		switch (d.getDirection()) {
 		case 1:
@@ -163,7 +149,7 @@ public class Joueur {
 		}
 	}
 	
-	public boolean isPlaceOk(Domino domino, int x, int y) {
+	public boolean isPlaceOk(Domino domino, int x, int y) { //methode pour placer le dominer selon la case ou le joueur va cliquer
 
 		int type1 = domino.getType1();
 		int type2 = domino.getType2();
@@ -249,7 +235,7 @@ public class Joueur {
 		return true;
 	}
 	
-	public boolean isDimensionOk() {
+	public boolean isDimensionOk() { //methode pour verifier qu'apres placement d'un domino les dimensions du royaume sont respectées ( maximum 5x5)
 		// for rows and columns
 		int rowDimension = 0;
 		int columnDimension = 0;
@@ -270,13 +256,13 @@ public class Joueur {
 				}
 			}
 		}
-		if (rowDimension > 5 || columnDimension > 5) {
+		if (rowDimension > 5 || columnDimension > 5) { // si les colones ou les lignes depasse 5 alors la fonction renvoie false
 			return false;
 		}
 		return true;
 	}
 
-	public void removeDominoFromLand(Domino domino, int x, int y) {
+	public void removeDominoFromLand(Domino domino, int x, int y) { // Si lorsque l'on place le domino les dimensions du royaume depasse 5x5 on utilisera cette methode pour suprimer le domoni
 		switch (domino.getDirection()) {
 		case Domino.D1:
 			this.land[x][y] = new Royaume();
@@ -300,7 +286,7 @@ public class Joueur {
 		}
 	}
 	
-	public void placeDomino(Domino domino, int x, int y) {
+	public void placeDomino(Domino domino, int x, int y) { //méthode pour placer les domino
 		int type1 = domino.getType1();
 		int nbCouronne1 = domino.getNbcouronne1();
 		int type2 = domino.getType2();
@@ -347,29 +333,45 @@ public class Joueur {
 			break;
 		}
 	}
+	/**
+	 * 1.[9][9][4]的[4]是什么？
+	 * 2.为什么scoreList一开始等于-1和scorelist代表了什么
+	 * 3.setDirection，getNumDomino跟Domino有关
+	 * 4.isLandOccupied，isPlaceOk，placeDomino，isDimensionOk，removeDominoFromLand跟joueur有关系
+	 * 5。
+	 * */
 	
 	public boolean detectPositions(Domino domino) {
 		int availablePositions = 0;
+		scoreList = new int[9][9][4];
 		for (int i = 0; i < 9; i++) { // rows
 			for (int j = 0; j < 9; j++) { // columns
 				for (int k = 0; k < 4; k++) { // for direction 1 to 4
+					scoreList[i][j][k] = -1; // initialisation
 					domino.setDirection(k + 1);
 					if (!isLandOccupied(domino, i, j) && isPlaceOk(domino, i, j)) {
 						placeDomino(domino, i, j);
 						if (isDimensionOk()) {
 							availablePositions = availablePositions + 1;
+							scoreList[i][j][k] = finalScore();
 						}
-						removeDominoFromLand(domino, i, j); // only detection, so remove
-
+						removeDominoFromLand(domino, i, j);
 					}
 				}
 			}
 		}
-		return false;
+		if (availablePositions == 0) {
+			System.out.println(
+					"Pas de position disponible pour domino" + domino.getNumDomino() + "! Vous devez jeter ce domino");
+			// discard domino code
+			return false;
+		} else {
+			return true;
+		}
 
 	}
 	
-	public class Location {
+	public class Location {  // classe pour creer et initialiser un point avec des coordonées x et y donées
 		int x, y;
 
 		public Location(int x, int y) {
@@ -401,22 +403,42 @@ public class Joueur {
 		}
 		return tempArea;
 	}
-	
+	//如果detectPositions检测有位置就可以执行putDomino方法
 	public void place(Domino domino) {
-
+		if (detectPositions(domino)) {
+			putDomino(domino);
+		} else {
+			System.out.println("Aucun poste disponible ! Domino rejeté");
+		}
 	}
+	/*printLand,getId,calculateScore跟Joueur有关系
+	 *
+	 *
+	 */
+	public void putDomino(Domino domino) {
+			int x = bestPosition(domino)[1];
+			int y = bestPosition(domino)[2];
+			int direction = bestPosition(domino)[3];
+
+			domino.setDirection(direction);
+			placeDomino(domino, x, y);
+			printLand();
+			System.out.println("Score actuel du joueur " + getId() + " est " + calculateScore());
+
+		}
+
 	
-	public int calculateScore() {
+	public int calculateScore() {  //méthode de calcul du score a la fin de la partie
 		score = 0;
 		int[][] nbcouronne = new int[9][9];
-		for (int i = 0; i < 9; i++) { // rows
-			for (int j = 0; j < 9; j++) { // columns
+		for (int i = 0; i < 9; i++) { // ligne
+			for (int j = 0; j < 9; j++) { // colonne
 				nbcouronne[i][j] = -1; // initialisation
 			}
 		}
 
-		for (int i = 0; i < 9; i++) { // rows
-			for (int j = 0; j < 9; j++) { // columns
+		for (int i = 0; i < 9; i++) { // ligne
+			for (int j = 0; j < 9; j++) { // colonne
 				if (nbcouronne[i][j] == -1 && land[i][j].estOccupe()) {
 					Location location = new Location(i, j);
 					findRoyaume(location, nbcouronne);
@@ -438,7 +460,7 @@ public class Joueur {
 		this.renderInfo(graphics, Jeu.ALTERNATIVE_MESSAGE);
 	}
 	
-	public void renderAreaInLand(Graphics graphics) {
+	public void renderAreaInLand(Graphics graphics) { //affichage graphique du royaume
 		float x = RENDER_START_PT_X;
 		float y = RENDER_START_PT_Y;
 
@@ -458,11 +480,8 @@ public class Joueur {
 		float x = Jeu.width * 0.75f;
 		float y = Jeu.height * 0.2f;
 		float d = Jeu.width * 0.015f;
-		// String str = "Player No." + id + "\r\n" + "Player name : " + playerName +
-		// "\r\n" + "King color : " + kingColor;
 
 		graphics.setColor(color);
-		// graphics.drawString("Round : " + Game.ROUND, x, y);
 		graphics.drawString("Player No." + id, x, y + d);
 		graphics.drawString("Player name : " + NomJoueur, x, y + 2 * d);
 		graphics.drawString("King color : " + CouleurRoi, x, y + 3 * d);
@@ -470,7 +489,7 @@ public class Joueur {
 
 	}
 	
-	public void renderLandMini(Graphics graphics, float x, float y) {
+	public void renderLandMini(Graphics graphics, float x, float y) { //affichage graphique des royaume sur la minimap
 		for (int i = 0; i < LAND_DIMENSION; i++) {
 			for (int j = 0; j < LAND_DIMENSION; j++) {
 
@@ -483,7 +502,7 @@ public class Joueur {
 		}
 	}
 	
-	public void renderRois(Graphics graphics, float x, float y) {
+	public void renderRois(Graphics graphics, float x, float y) { //affichage graphique des rois
 		float d = Jeu.width * 0.1f;
 		int i = 0;
 		for (Roi k : rois) {
@@ -492,18 +511,10 @@ public class Joueur {
 		}
 	}
 	
-	public void renderLand(Graphics graphics) {
-		graphics.setColor(Color.white);
-		float y = RENDER_START_PT_Y;
-		float width, height;
-		width = height = y + (LAND_DIMENSION - 1) * Jeu.dominoWidth;
-		graphics.fillRect(y, y, width, height);
-		renderAreaInLand(graphics);
-	}
 	
 	public void findRoyaume(Location location, int[][] crownNum) {
 		Deque<Location> stackCrown = new LinkedList<Location>();
-		stackCrown.push(location); // put the location in the stack
+		stackCrown.push(location); // On met la location dans le stack
 		int x = location.x;
 		int y = location.y;
 		int counter = land[x][y].getNbCouronne();
@@ -559,9 +570,9 @@ public class Joueur {
 	public int finalScore() {
 		int finalScore = calculateScore();
 		int landNum = 0;
-		// if land is complet
-		for (int i = 0; i < 9; i++) { // rows
-			for (int j = 0; j < 9; j++) { // columns
+		// si le royaume est complet
+		for (int i = 0; i < 9; i++) { // ligne
+			for (int j = 0; j < 9; j++) { // colonne
 				if (land[i][j].estOccupe()) {
 					landNum++;
 				}
@@ -585,7 +596,7 @@ public class Joueur {
 					break;
 				}
 			}
-			if (top) {
+			if (top) { // lorsqu'on arrive a la limite en hauteur la boucle s'arrete
 				break;
 			}
 		}
@@ -641,29 +652,8 @@ public class Joueur {
 		singleEmptyAreaNum = tmpSingleEmptyAreaNum;
 	}
 	
-	public void checkLand(int borderTop, int borderLeft) {
-		//System.out.println((borderTop + MAX_DIMENSION) + " " + (borderLeft + MAX_DIMENSION));
-		int tmpEmptyAreaNum = 0;
-		int tmpSingleEmptyAreaNum = 0;
-		
-		for (int i = borderTop; i != borderTop + MAX_DIMENSION; i++) {
-			for (int j = borderLeft; j != borderLeft + MAX_DIMENSION; j++) {
-				if (!land[i][j].estOccupe()) {
-					tmpEmptyAreaNum++;
-
-					if (isEmptyAreaSingle(i, j, borderTop, borderLeft)) {
-						tmpSingleEmptyAreaNum++;
-						//System.out.println(i + " " + j);
-					}
-
-				} else {
-					totalCrownNum += land[i][j].getNbCouronne();
-				}
-			}
-		}
-		emptyAreaNum = tmpEmptyAreaNum;
-		singleEmptyAreaNum = tmpSingleEmptyAreaNum;
-	}
+	
+	//Methode pour verifier si les alentours d'une case sont libres, on utilisera cette methode pour verifier si le joueur peut placer un domino
 	public boolean isEmptyAreaSingle(int i, int j, int borderTop, int borderLeft) {
 		if (i == borderTop && j == borderLeft) {
 			return land[i + 1][j].estOccupe() && land[i][j + 1].estOccupe();
@@ -687,18 +677,87 @@ public class Joueur {
 		}
 
 	}
+	/**
+	 * 1.为什么bestPosition(domino)[0]
+	 * 2.D1是什么
+	 * 3.max是什么
+	 * 4.index是什么*/
+		// for turn 1
 	public int chooseBestDominoTurn1(List<Domino> dominoList) {
-		return 0;
+		int max = bestPosition(dominoList.get(0))[0];
+		int index = 0;
+		for (Domino domino : dominoList) {
+			if (bestPosition(domino)[0] > max){
+				max = bestPosition(domino)[0];
+				index = dominoList.indexOf(domino);
+			}
+			domino.setDirection(Domino.D1);
+		}
+		return index;
 	}
-
+	// other turns
 	public int chooseBestDomino(Domino preDomino, int preX, int preY, int preDirection, List<Domino> dominoList) {
-		return 0;
+		preDomino.setDirection(preDirection);
+		placeDomino(preDomino, preX, preY);
+		int max = bestPosition(dominoList.get(0))[0];
+		int index = 0;
+		for (Domino domino : dominoList) {
+			if (bestPosition(domino)[0] > max) {
+				max = bestPosition(domino)[0];
+				index = dominoList.indexOf(domino);
+			}
+			domino.setDirection(Domino.D1);
+		}
+		removeDominoFromLand(preDomino, preX, preY);
+		preDomino.setDirection(Domino.D1);
+		return index;
 	}
+	/*
+	 * 1.returnArray是什么/returnArray的4个对象和index的3个对象有着什么关系
+	 * 2.4个direction是什么
+	 * 3.Math.abs(i - 4) + Math.abs(j - 4) < Math.abs(index[0] - 4) + Math.abs(index[1] - 4)*/
 	public int[] bestPosition(Domino domino) {
-		int[] returnArray = new int[4];
+		// detectPositions(domino);
+					int[] returnArray = new int[4];
+					if (detectPositions(domino)) {
+						int max = scoreList[0][0][0];
+						int[] index = new int[3];
 
-		return returnArray;
-	}
+						for (int i = 0; i < 9 ; i++) { // rows
+							for (int j = 0; j < 9; j++) { // columns
+								for (int k = 0; k < 4; k++) { // for direction 1 to 4
+									if (scoreList[i][j][k] > max) {
+										max = scoreList[i][j][k];
+										index[0] = i;
+										index[1] = j;
+										index[2] = k;
+									} else if (scoreList[i][j][k] == max) {
+										// To maximise the chance where castle is in the middle
+										if (Math.abs(i - 4) + Math.abs(j - 4) < Math.abs(index[0] - 4) + Math.abs(index[1] - 4)) {
+											{
+												max = scoreList[i][j][k];
+												index[0] = i;
+												index[1] = j;
+												index[2] = k;
+											}
+										}
+									}
+								}
+							}
+						}
+						returnArray[0] = max; // score
+						returnArray[1] = index[0]; // x
+						returnArray[2] = index[1]; // y
+						returnArray[3] = index[2] + 1; // direction
+					} else {
+						returnArray[0] = -1; // score
+						returnArray[1] = 0; // x
+						returnArray[2] = 0; // y
+						returnArray[3] = 1; // direction
+					}
+					return returnArray;
+				}
+	
 	public void printResultInCsv() throws IOException {
 
 		FileWriter fw = null;

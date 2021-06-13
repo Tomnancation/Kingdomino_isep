@@ -30,15 +30,15 @@ public class Royaume  {
 	public final static int MONTAGNE = 6;
 	public final static int CHATEAU = 100;
 	
-	// colors
+	// couleurs du miniLand 
 	public final static Color CHAMPS_COLOR = Color.yellow;
-	public final static Color FORET_COLOR = new Color(0, 100, 0);// darkgreen
-	public final static Color MER_COLOR = Color.cyan;
-	public final static Color PRAIRIE_COLOR = new Color(173, 255, 47); // greenyellow
-	public final static Color MINE_COLOR = Color.gray;
+	public final static Color FORET_COLOR = new Color(0, 66,37);// darkgreen
+	public final static Color MER_COLOR = new Color(0,127,255);
+	public final static Color PRAIRIE_COLOR = new Color(240, 232, 145); // greenyellow
+	public final static Color MINE_COLOR = new Color(169,169,169);
 	public final static Color MONTAGNE_COLOR = new Color(165, 42, 42); // brown
 	public final static Color CASTLE_COLOR = Color.white;
-	public final static Color EMPTY_COLOR = new Color(25, 25, 112);
+	public final static Color EMPTY_COLOR = new Color(110, 1, 1);
 
 
 	// Getters and setters
@@ -159,8 +159,7 @@ public class Royaume  {
 		}
 	}
 	public void render(Graphics graphics, float x, float y) {
-		// graphics.setColor(typeToColor());
-		// graphics.fillRect(x, y, Jeu.dominoWidth, Jeu.dominoWidth);
+		
 		try {
 			typeToImage().draw(x, y, Jeu.dominoWidth, Jeu.dominoWidth);
 		} catch (SlickException e) {
@@ -177,15 +176,11 @@ public class Royaume  {
 	public void renderMini(Graphics graphics, float x, float y) {
 		graphics.setColor(typeToColor());
 		graphics.fillRect(x, y, Jeu.dominoWidth * 0.2f, Jeu.dominoWidth * 0.2f);
-		// graphics.drawString(String.valueOf(crownNum1), x + Game.dominoWidth / 2, y +
-		// Game.dominoWidth / 2);
+		
 	}
 	
-	
+public static void main(String[]args) {}
 
 	//
 	
-	
-
-
 }

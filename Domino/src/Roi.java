@@ -4,7 +4,7 @@ import org.newdawn.slick.*;
 
 import org.newdawn.slick.*;
 
-
+//1.为什么要定义ID_Roi=1
 public class Roi {
 	private int id;
 	private String couleur;
@@ -13,11 +13,9 @@ public class Roi {
 	public static Image roi;
 	
 	public Roi() {
-
 	}
 
 	//Constructeur
-	
 	public Roi(String coleur) {
 		this.id = ID_Roi;
 		this.couleur = coleur;
@@ -33,10 +31,13 @@ public class Roi {
 		return couleur;
 	}
 
-	public void setCouleur(String coleur) {
-		this.couleur = coleur;
+	public void setCouleur(String couleur) {
+		this.couleur = couleur;
 	}
-	
+	/**
+	 *1.printDominoList，dominoListDraw，getJoueurByRoi都是关于console
+	 *2.dominoOk是什么东西 
+	 *3.59行有关于AI的代码*/
 	public Domino draw() {
 		Domino d = null;
 		Console.printDominoList(Console.dominoListDraw);

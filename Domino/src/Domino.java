@@ -8,7 +8,7 @@ public class Domino {
 	private int x;
 	private int y;
 	
-	//On definit les attributs de domino pr¨¦sents aussi dans le fichier csv
+	//On definit les attributs de domino prÂ¨Â¦sents aussi dans le fichier csv
 	private int Nbcouronne1;
 	private int type1;
 	private int Nbcouronne2;
@@ -51,7 +51,7 @@ public class Domino {
 	private final static int TURN_RIGHT = Jeu.DROITE;
 	
 	
-	// Constructeur pour d¨¦finir iniatialement un domino
+	// Constructeur pour dÂ¨Â¦finir iniatialement un domino
 	public Domino(int Nbcouronne1, int type1, int Nbcouronne2, int type2, int numDomino) {
 		this.Nbcouronne1 = Nbcouronne1;
 		this.type1 = type1;
@@ -100,10 +100,10 @@ public class Domino {
 
 	public static String typeToString(int type) {
 		switch (type) {
-		case CHAMPS:
-			return "Champs";
 		case FORET:
 			return "Foret";
+		case CHAMPS:
+			return "Champs";
 		case MER:
 			return "Mer";
 		case PRAIRIE:
@@ -122,10 +122,10 @@ public class Domino {
 
 	public static int typeToInt(String type) {
 		switch (type) {
-		case "Champs":
-			return CHAMPS;
 		case "Foret":
 			return FORET;
+		case "Champs":
+			return CHAMPS;
 		case "Mer":
 			return MER;
 		case "Prairie":

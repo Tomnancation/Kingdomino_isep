@@ -6,7 +6,7 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-
+//继承BasicGameState写出固定写法
 public class CreerJoueur extends BasicGameState {
 	
 	private final static int ID = Jeu.CREAT_JoueurS;
@@ -14,7 +14,10 @@ public class CreerJoueur extends BasicGameState {
 	  TextField textField;
 
 
-
+/*
+ * 1.font的作用
+ * 2.textField是定义什么的
+ * 3.init定于图像，render提交数据，update更新数据，*/
 	@Override
 	public void init(GameContainer gc, StateBasedGame sb) throws SlickException {
 		font = font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
