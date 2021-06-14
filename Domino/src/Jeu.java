@@ -583,8 +583,8 @@ public  class Jeu extends BasicGame {
 				currentJoueur = getJoueurByRoi(currentRoi);
 
 			}
-			if (currentJoueur.joueurType.equals("Person")) {
-				if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)) {
+			
+			if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)) {
 					int posX = input.getMouseX();
 					int posY = input.getMouseY();
 
@@ -602,31 +602,7 @@ public  class Jeu extends BasicGame {
 						}
 					}
 
-				}
-			} else {
-				if (!dominoListDraw.isEmpty()) {
-					if (Jeu.tour == 1) {
-
-						int index = currentJoueur.chooseBestDominoTurn1(dominoListDraw);
-						Domino d = dominoListDraw.get(index);
-						tempRoiToDomino.put(currentRoi, d);
-						dominoListDraw.remove(index);
-						RoiChoseDomino++;
-
-					} else {
-
-						Domino pre = RoiToDomino.get(currentRoi);
-						int bestX = currentJoueur.bestPosition(pre)[1];
-						int bestY = currentJoueur.bestPosition(pre)[2];
-						int bestDirection = currentJoueur.bestPosition(pre)[3];
-						int index = currentJoueur.chooseBestDomino(pre, bestX, bestY, bestDirection, dominoListDraw);
-						Domino d = dominoListDraw.get(index);
-						tempRoiToDomino.put(currentRoi, d);
-						dominoListDraw.remove(d);
-						RoiChoseDomino++;
-
-					}
-				}
+				
 			}
 
 			if (RoiChoseDomino >= NumeroRoi && input.isKeyPressed(CONFIRM)) {
@@ -660,7 +636,6 @@ public  class Jeu extends BasicGame {
 			}
 
 			if (playedRoi < NumeroRoi) {
-				if (currentJoueur.joueurType.equals("Person")) {
 //On change la position du domino avec la touche gauche du clavier
 					if (input.isMousePressed(input.MOUSE_LEFT_BUTTON)) {
 						int posX = input.getMouseX();
@@ -700,15 +675,10 @@ public  class Jeu extends BasicGame {
 						}
 
 					}
-				} else {
-					if (currentDomino != null) {
-						currentJoueur.place(currentDomino);
-						currentDomino = null;
-						playedRoi++;
-					}
+				
 
 				}
-			}
+			
 
 			if (playedRoi >= NumeroRoi && input.isKeyPressed(CONFIRM)) {
 

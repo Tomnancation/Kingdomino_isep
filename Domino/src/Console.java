@@ -307,7 +307,7 @@ public class Console {
 				// place domino
 				Domino domino = RoiToDomino.get(k);
 
-				if (p.joueurType.equals("Person")) {
+				
 					int x, y;
 					boolean putOk = false;
 					do {
@@ -333,13 +333,9 @@ public class Console {
 						}
 					} while (!putOk);
 
-				} else {
-					System.out.println("AI's turn !");
-					p.place(domino);
-				}
-
+				} 
 			}
-		}
+		
 		RoiToDomino = temproiToDomino;
 
 		System.out.println("___________________________________________________");
@@ -465,7 +461,6 @@ public class Console {
 
 	
 	
-	//---------------------------------
 	
 	
 }

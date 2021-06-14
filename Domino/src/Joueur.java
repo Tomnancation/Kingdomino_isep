@@ -403,29 +403,7 @@ public class Joueur {
 		}
 		return tempArea;
 	}
-	//如果detectPositions检测有位置就可以执行putDomino方法
-	public void place(Domino domino) {
-		if (detectPositions(domino)) {
-			putDomino(domino);
-		} else {
-			System.out.println("Aucun poste disponible ! Domino rejeté");
-		}
-	}
-	/*printLand,getId,calculateScore跟Joueur有关系
-	 *
-	 *
-	 */
-	public void putDomino(Domino domino) {
-			int x = bestPosition(domino)[1];
-			int y = bestPosition(domino)[2];
-			int direction = bestPosition(domino)[3];
 
-			domino.setDirection(direction);
-			placeDomino(domino, x, y);
-			printLand();
-			System.out.println("Score actuel du joueur " + getId() + " est " + calculateScore());
-
-		}
 
 	
 	public int calculateScore() {  //méthode de calcul du score a la fin de la partie
@@ -677,86 +655,6 @@ public class Joueur {
 		}
 
 	}
-	/**
-	 * 1.为什么bestPosition(domino)[0]
-	 * 2.D1是什么
-	 * 3.max是什么
-	 * 4.index是什么*/
-		// for turn 1
-	public int chooseBestDominoTurn1(List<Domino> dominoList) {
-		int max = bestPosition(dominoList.get(0))[0];
-		int index = 0;
-		for (Domino domino : dominoList) {
-			if (bestPosition(domino)[0] > max){
-				max = bestPosition(domino)[0];
-				index = dominoList.indexOf(domino);
-			}
-			domino.setDirection(Domino.D1);
-		}
-		return index;
-	}
-	// other turns
-	public int chooseBestDomino(Domino preDomino, int preX, int preY, int preDirection, List<Domino> dominoList) {
-		preDomino.setDirection(preDirection);
-		placeDomino(preDomino, preX, preY);
-		int max = bestPosition(dominoList.get(0))[0];
-		int index = 0;
-		for (Domino domino : dominoList) {
-			if (bestPosition(domino)[0] > max) {
-				max = bestPosition(domino)[0];
-				index = dominoList.indexOf(domino);
-			}
-			domino.setDirection(Domino.D1);
-		}
-		removeDominoFromLand(preDomino, preX, preY);
-		preDomino.setDirection(Domino.D1);
-		return index;
-	}
-	/*
-	 * 1.returnArray是什么/returnArray的4个对象和index的3个对象有着什么关系
-	 * 2.4个direction是什么
-	 * 3.Math.abs(i - 4) + Math.abs(j - 4) < Math.abs(index[0] - 4) + Math.abs(index[1] - 4)*/
-	public int[] bestPosition(Domino domino) {
-		// detectPositions(domino);
-					int[] returnArray = new int[4];
-					if (detectPositions(domino)) {
-						int max = scoreList[0][0][0];
-						int[] index = new int[3];
-
-						for (int i = 0; i < 9 ; i++) { // rows
-							for (int j = 0; j < 9; j++) { // columns
-								for (int k = 0; k < 4; k++) { // for direction 1 to 4
-									if (scoreList[i][j][k] > max) {
-										max = scoreList[i][j][k];
-										index[0] = i;
-										index[1] = j;
-										index[2] = k;
-									} else if (scoreList[i][j][k] == max) {
-										// To maximise the chance where castle is in the middle
-										if (Math.abs(i - 4) + Math.abs(j - 4) < Math.abs(index[0] - 4) + Math.abs(index[1] - 4)) {
-											{
-												max = scoreList[i][j][k];
-												index[0] = i;
-												index[1] = j;
-												index[2] = k;
-											}
-										}
-									}
-								}
-							}
-						}
-						returnArray[0] = max; // score
-						returnArray[1] = index[0]; // x
-						returnArray[2] = index[1]; // y
-						returnArray[3] = index[2] + 1; // direction
-					} else {
-						returnArray[0] = -1; // score
-						returnArray[1] = 0; // x
-						returnArray[2] = 0; // y
-						returnArray[3] = 1; // direction
-					}
-					return returnArray;
-				}
 	
 	public void printResultInCsv() throws IOException {
 
