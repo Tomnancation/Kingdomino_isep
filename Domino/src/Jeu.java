@@ -28,7 +28,7 @@ public  class Jeu extends BasicGame {
 	public static int tour = 1;  			//premier tour pour le choix de domino, il ne permet pas de placer les dominos 
 	
 	public static List<Joueur> joueurList = new ArrayList<>();
-	public static List<Integer> OrdreJoueur;
+	
 	
 	//on configure les touches haut bas gauche droite du clavier
 	public final static int HAUT = Input.KEY_UP;
@@ -254,10 +254,10 @@ public  class Jeu extends BasicGame {
 			}
 			System.out.println("Nombre de rois : " + l.size());
 		}
-		public static void printRoiInfo(Roi k) {
+		public static void printRoiInfo(Roi r) {
 			System.out.println("-------------------");
-			System.out.println(k.getCouleur() + " king");
-			System.out.println("king id : " + k.getId());
+			System.out.println(r.getCouleur() + " Roi");
+			System.out.println("Roi id : " + r.getId());
 			System.out.println("-------------------");
 		}
 		

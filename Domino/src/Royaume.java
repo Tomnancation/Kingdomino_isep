@@ -179,8 +179,7 @@ public class Royaume  {
 		
 	}
 	
-public static void main(String[]args) {}
 
-	//
+
 	
 }

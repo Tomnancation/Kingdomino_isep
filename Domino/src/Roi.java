@@ -49,8 +49,7 @@ public class Roi {
 					dominoOk = true;
 					
 				} catch (Exception e) {
-					System.out.println("Erreur.");
-					// e.printStackTrace();
+					e.printStackTrace();
 				}
 			} while (!dominoOk);
 			return d;
@@ -75,8 +74,6 @@ public class Roi {
 		}
 	}
 	public void render(Graphics graphics, float x, float y) {
-		// graphics.fillRect(this.x, this.y, 200, 200);
-		//graphics.drawImage(king, x, y,(int)(Game.dominoWidth),(int)(Game.dominoWidth), y, y, color());
 		roi.draw(x,y,Jeu.dominoWidth*1.5f,Jeu.dominoWidth*1.5f,color());
 	}
 }
