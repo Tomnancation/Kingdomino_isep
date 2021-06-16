@@ -445,9 +445,9 @@ public class Joueur {
 		float d = Jeu.width * 0.015f;
 
 		graphics.setColor(color);
-		graphics.drawString("Player No." + id, x, y + d);
-		graphics.drawString("Player name : " + NomJoueur, x, y + 2 * d);
-		graphics.drawString("King color : " + CouleurRoi, x, y + 3 * d);
+		graphics.drawString("Joueur id." + id, x, y + d);
+		graphics.drawString("NomJoueur : " + NomJoueur, x, y + 2 * d);
+		graphics.drawString("CouleurRoi : " + CouleurRoi, x, y + 3 * d);
 		renderRois(graphics, x, y + 10 * d);
 
 	}
