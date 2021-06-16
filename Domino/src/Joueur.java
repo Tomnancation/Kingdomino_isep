@@ -28,8 +28,7 @@ public class Joueur {
 	static int Joueur_ID = 1;
 	// print in csv
 	
-	int finalScore;
-	boolean chateauCenter ;
+
 	int totalCrownNum = 0;
 	int emptyAreaNum = 0;
 	int singleEmptyAreaNum = 0;
@@ -94,21 +93,7 @@ public class Joueur {
 		}
 		return royaume;
 	}
-	// on attribue a chaque couleur de roi un Id
-	public static int colorToId(String kingColor) {
-		switch (kingColor) {
-		case "red":
-			return 1;
-		case "yellow":
-			return 3;
-		case "blue":
-			return 5;
-		case "pink":
-			return 7;
-		default:
-			return -1;
-		}
-	}
+	
 	
 	// m¨¦thode que l'on va utiliser pour mettre a jour le royaume apres chaque changement
 	public void printLand() {
@@ -353,7 +338,7 @@ public class Joueur {
 						placeDomino(domino, i, j);
 						if (isDimensionOk()) {
 							availablePositions = availablePositions + 1;
-							scoreList[i][j][k] = finalScore();
+							scoreList[i][j][k] = calculateScore();
 						}
 						removeDominoFromLand(domino, i, j);
 					}
@@ -545,69 +530,8 @@ public class Joueur {
 		}
 		// Location elem = stackCrown.peek();
 	}
-	public int finalScore() {
-		int finalScore = calculateScore();
-		int landNum = 0;
-		// si le royaume est complet
-		for (int i = 0; i < 9; i++) { // ligne
-			for (int j = 0; j < 9; j++) { // colonne
-				if (land[i][j].estOccupe()) {
-					landNum++;
-				}
-			}
-		}
-		if (landNum == 25) {
-			finalScore += 5;
-			System.out.println("Land complet");
-		}
-
-		// if castle is in the middle
-		int[] border = new int[2];
-		boolean top = false;
-		boolean left = false;
-
-		for (int i = 0; i != land.length; i++) {
-			for (int j = 0; j != land[i].length; j++) {
-				if (land[i][j].estOccupe()) {
-					border[0] = i; // top border
-					top = true;
-					break;
-				}
-			}
-			if (top) { // lorsqu'on arrive a la limite en hauteur la boucle s'arrete
-				break;
-			}
-		}
-		for (int i = 0; i != land.length; i++) {
-			for (int j = 0; j != land[i].length; j++) {
-
-				if (land[j][i].estOccupe()) {
-					border[1] = i; // left border
-					left = true;
-					break;
-				}
-			}
-			if (left) {
-				break;
-			}
-		}
-
-		if (land[border[0] + 2][border[1] + 2].getType() == Royaume.CHATEAU) {
-			finalScore += 10;
-			System.out.println("Castle in the middle");
-			this.chateauCenter = true;
-
-		}
-
-		this.finalScore = finalScore;
-
-		verifieLand(border[0], border[1]);
-
-		return finalScore;
-
-	}
+	
 	public void verifieLand(int borderTop, int borderLeft) {
-		//System.out.println((borderTop + MAX_DIMENSION) + " " + (borderLeft + MAX_DIMENSION));
 		int tmpEmptyAreaNum = 0;
 		int tmpSingleEmptyAreaNum = 0;
 		
@@ -656,21 +580,5 @@ public class Joueur {
 
 	}
 	
-	public void printResultInCsv() throws IOException {
 
-		FileWriter fw = null;
-
-		try {
-			fw = new FileWriter(new File("results.csv"), true);
-			fw.append(finalScore + "," + chateauCenter + "," + emptyAreaNum + "," + singleEmptyAreaNum + ","
-					+ totalCrownNum + "\n");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-
-			fw.close();
-		}
-
-	}
 }

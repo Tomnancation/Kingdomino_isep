@@ -356,7 +356,7 @@ public  class Jeu extends BasicGame {
 		winner.calculateScore();
 		winnerScore = winner.score;
 		for (Joueur p : joueurList) {
-			int score = p.finalScore();
+			int score = p.calculateScore();
 			if (score > winnerScore) {
 				winner = p;
 				winnerScore = score;

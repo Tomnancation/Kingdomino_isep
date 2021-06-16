@@ -30,7 +30,7 @@ public class Royaume  {
 	public final static int MONTAGNE = 6;
 	public final static int CHATEAU = 100;
 	
-	// couleurs du miniLand 
+	// couleurs du miniLand  
 	public final static Color CHAMPS_COLOR = Color.yellow;
 	public final static Color FORET_COLOR = new Color(0, 66,37);// darkgreen
 	public final static Color MER_COLOR = new Color(0,127,255);

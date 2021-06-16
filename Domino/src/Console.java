@@ -15,6 +15,7 @@ public class Console {
 	static List<Roi> roiList = new ArrayList<>();
 	static Map<Roi, Domino> RoiToDomino = new LinkedHashMap<Roi, Domino>();
 	
+	
 	//Getters
 	public static int getNumeroJoueur() {
 		return NumeroJoueur;
@@ -435,17 +436,8 @@ public class Console {
 
 			System.out.println("GAME OVER");
 			for (Joueur p : joueurList) {
-				int finalScore = p.finalScore();
-				p.printLand();
-				System.out.println("Final score of player " + p.getId() + " is " + finalScore);
-				System.out.println(p.finalScore + "," + p.chateauCenter + "," + p.emptyAreaNum + ","
-						+ p.singleEmptyAreaNum + "," + p.totalCrownNum + "\n");
-				try {
-					p.printResultInCsv();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				int calculateScore = p.calculateScore();
+				System.out.println("Final Score of player " + p.getId() + " is " + calculateScore);
 
 			}
 
@@ -457,8 +449,8 @@ public class Console {
 			roiList.removeAll(roiList);
 			RoiToDomino.clear();
 		}
-	}
-	
 }
+}	
+
 
 
