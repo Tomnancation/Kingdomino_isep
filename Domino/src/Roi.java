@@ -41,7 +41,6 @@ public class Roi {
 		boolean dominoOk = false;
 			do {
 				try {
-					Console.printRoiInfo(this);
 					System.out.println("choisissez un domino");
 					int n = Console.saisirInt();
 					d = Console.dominoListDraw.get(n);  // on prend un domino
@@ -52,8 +51,7 @@ public class Roi {
 					e.printStackTrace();
 				}
 			} while (!dominoOk);
-			return d;
-			
+			return d;	
 		}
 	public Color color() {
 		switch (couleur) {
