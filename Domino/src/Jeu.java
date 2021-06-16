@@ -407,7 +407,7 @@ public  class Jeu extends BasicGame {
 	}
 //methode qui permet d'afficher le jeu en petite dimension pour suivre l'avancement 	
 	public static void renderMiniLand(Graphics graphics) {
-		float x = width * 0.65f; //position du miniLand (bleu en bas d'ecran a droite)
+		float x = width * 0.50f; //position du miniLand (bleu en bas d'ecran a droite)
 		float y = height * 0.83f;  //position du miniLand
 		int i = 0;
 		for (Joueur p : joueurList) {
@@ -499,12 +499,12 @@ public  class Jeu extends BasicGame {
 
 			displayedString1 = "Vous avez saisi : " + String.valueOf(NumeroJoueur); //conversion en string
 
-			ArrayList<String> listColor = new ArrayList<String>(Arrays.asList("red", "yellow", "green", "blue"));
+			ArrayList<String> listColor = new ArrayList<String>(Arrays.asList("rose", "jaune", "vert", "bleu"));
 			int RoiPerJoueur = NumeroJoueur == 2 ? 2 : 1;
 
 			if (createdJoueur < NumeroJoueur) {
 				
-				displayedString2 = "Saisissez maintenant le nom de votre joueur numéro " + String.valueOf(createdJoueur + 1);
+				displayedString2 = "Saisissez le nom du joueur qui veut choisir le roi en " + listColor.get(createdJoueur);
 				String name = "";
 				if (input.isKeyPressed(input.KEY_ENTER)) {
 					name = textField.getText(); // apres la saisie, on recupere le nom du joueur

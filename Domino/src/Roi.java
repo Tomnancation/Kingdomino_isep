@@ -55,15 +55,15 @@ public class Roi {
 		}
 	public Color color() {
 		switch (couleur) {
-		case "blue":
+		case "bleu":
 			return Color.blue;
-		case "red":
+		case "rouge":
 			return Color.red;
-		case "green":
+		case "vert":
 			return Color.green;
-		case "pink":
+		case "rose":
 			return Color.pink;
-		case "yellow":
+		case "jaune":
 			return Color.yellow;
 		case "cyan":
 			return Color.cyan;

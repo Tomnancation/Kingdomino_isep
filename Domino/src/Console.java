@@ -178,12 +178,12 @@ public class Console {
 
 	}
 
-	public static void printPlayerInfo(Joueur p) {
-		System.out.println("Player No." + p.getId());
-		System.out.println("Player name : " + p.getNomJoueur());
+	public static void printJoueurInfo(Joueur p) {
+		System.out.println("Joueur No." + p.getId());
+		System.out.println("Joueur name : " + p.getNomJoueur());
 		System.out.println("roi number : " + p.getNumeroRoi());
 		System.out.println("roi color : " + p.getCouleurRoi());
-		System.out.println("Player type : " + p.getJoueurType());
+		System.out.println("Joueur type : " + p.getJoueurType());
 
 		printroiList(p.getRois());
 		p.printLand();
@@ -193,7 +193,7 @@ public class Console {
 	public static void printJoueurList(List l) {
 		Iterator<Joueur> iterator = l.iterator();
 		while (iterator.hasNext()) {
-			printPlayerInfo(iterator.next());
+			printJoueurInfo(iterator.next());
 		}
 	}
 	// initialisation des joueur
@@ -458,10 +458,6 @@ public class Console {
 			RoiToDomino.clear();
 		}
 	}
-
-	
-	
-	
 	
 }
 
