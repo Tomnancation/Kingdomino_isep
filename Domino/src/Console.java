@@ -417,39 +417,6 @@ public class Console {
 		return dominoList;
 	}
 	
-	
-	public static void main(String[] args) {
-
-		// initialisation
-		for (int i = 0; i < 2000; i++) {
-			inisialisation();
-			System.out.println("___________________________________________________");
-			System.out.println("___________________________________________________");
-			// créer des joueurs
-			joueursInit();
-			System.out.println("___________________________________________________");
-			System.out.println("___________________________________________________");
-			// changer de tour
-			while (!gameOver()) {
-					tour();
-			}
-
-			System.out.println("GAME OVER");
-			for (Joueur p : joueurList) {
-				int calculateScore = p.calculateScore();
-				System.out.println("Final Score of player " + p.getId() + " is " + calculateScore);
-
-			}
-
-			System.out.println("___________________________________________________");
-			tour = 1;
-			joueurList.removeAll(joueurList);
-			dominoList.removeAll(dominoList);
-			dominoListDraw.removeAll(dominoListDraw);
-			roiList.removeAll(roiList);
-			RoiToDomino.clear();
-		}
-}
 }	
 
 

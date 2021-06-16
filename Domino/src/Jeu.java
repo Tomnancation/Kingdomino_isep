@@ -362,7 +362,9 @@ public  class Jeu extends BasicGame {
 				winnerScore = score;
 			}
 		}
-		System.out.println("The winner is : " + winner.getNomJoueur());
+		System.out.println("GAME OVER");
+		System.out.println("Le gagnant est : " + winner.getNomJoueur());
+		System.out.println("Score final joueur" + winner.getId() + " est " + winnerScore);
 		scoreCalculated = true;
 	}
 		
