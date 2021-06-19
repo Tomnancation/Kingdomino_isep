@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-1231414412134
+
 public class Console {
 	public static int NumeroJoueur;
 	public static int NumeroRoi;
