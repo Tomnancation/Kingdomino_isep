@@ -15,7 +15,7 @@ public  class Jeu extends BasicGame {
 //Constructeur
 	public Jeu(String title) {
 		super(title);
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 //On passe a la définition des attributs, certains attributs tels que les listes ou les attributs graphiques ont été défini apres les premiers	
@@ -237,8 +237,6 @@ public  class Jeu extends BasicGame {
 			printDominoList(dominoTempList);
 			roiList = configroiListForNextTurn(dominoTempList);
 			printroiList(roiList);
-
-			// dominoTempList.clear();
 			tour++;
 		}
 	// On termine le jeu s'il n'ya plus de dominos a placer	
@@ -279,7 +277,6 @@ public  class Jeu extends BasicGame {
 			Roi roi = null;
 			for (Roi k : RoiToDomino.keySet()) {
 				if (RoiToDomino.get(k).equals(d)) {
-					// tempList.add(k);
 					roi = k;
 				}
 			}
@@ -287,8 +284,8 @@ public  class Jeu extends BasicGame {
 		}
 		//CHARGEMENT DU DOMINO.CSV
 	public static List loadDominos(String filePath) {
-		List dominoList = new ArrayList<Domino>();   // On cr�er une liste de dominos
-		Scanner scanner;                             // pour avoir acc�s au clavier
+		List dominoList = new ArrayList<Domino>();   // On creer une liste de dominos
+		Scanner scanner;                             // pour avoir acces au clavier
 		int NbCouronne1, type1, NbCouronne2, type2, NumDomino;  //colonnes du tableau
 		boolean loadSuccessful = false;
 		do {
@@ -297,7 +294,7 @@ public  class Jeu extends BasicGame {
 				scanner = new Scanner(file);
 				scanner.useDelimiter(",|\n|\r");
 
-				for (int i = 0; i <= 4; i++) { // header
+				for (int i = 0; i <= 4; i++) { 
 					scanner.next();
 				}
 
@@ -421,11 +418,11 @@ public  class Jeu extends BasicGame {
 	// methode qui va permettre d'importer toutes nos images 
 	@Override
 	public void init(GameContainer gameContainer) throws SlickException {
-		width = gameContainer.getWidth();    // on importe la m�thode largeur
+		width = gameContainer.getWidth();    // on importe la methode largeur
 		height = gameContainer.getHeight();  // on importe la methode longueur
 		dominoWidth = (int) (width * 0.05);
 		dominoList = loadDominos("dominos.csv"); // dominos.csv
-		Collections.shuffle(dominoList);     // on m�lange la liste des domino pour pouvoir les tirer al�atoirement
+		Collections.shuffle(dominoList);     // on m�lange la liste des domino pour pouvoir les tirer aleatoirement
 		//printDominoList(dominoList);
 		
 		// chargement des images dans le fichier ressource
@@ -456,7 +453,6 @@ public  class Jeu extends BasicGame {
 	}
 	@Override
 	public void update(GameContainer gameContainer, int delta) throws SlickException {
-		// System.out.println("current phase" + Jeu_PHASE);
 		Input input = gameContainer.getInput();
 
 		float x, y;
@@ -801,8 +797,6 @@ public  class Jeu extends BasicGame {
 	
 	@Override
 	public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
-		// TrueTypeFont font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,
-		// java.awt.Font.BOLD, 50),false);
 		graphics.setFont(font);
 		textField.setFocus(true);
 
