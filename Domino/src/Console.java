@@ -6,8 +6,7 @@ public class Console {
 	public static int NumeroRoi;
 	public static int tour=1;
 	public static List<Joueur> joueurList = new ArrayList<>();
-	public static int maxTour;
-	
+	public static int maxTour;	
 	public static List<Integer> ordreJoueur;
 	
 	public static List<Domino> dominoList;
@@ -25,7 +24,7 @@ public class Console {
 	}
 	
 	// On fixe le nombre de joueurs entre 2 et 4
-	// !!
+	//
 	public static boolean numJoueurOK(int joueurN) {
 		return 2 <= joueurN && joueurN <= 4;
 	}
@@ -55,7 +54,7 @@ public class Console {
 				scan.nextLine();
 			}
 		} while (!bonneValeur);
-		return nombre; // n est le nombre de joueur retourn�
+		return nombre; //  le nombre de joueur retourn�
 	}
 	
 	public static boolean bonnePosition(int x) {

@@ -7,8 +7,8 @@ public class Royaume  {
 	private boolean estOccupe;
 	
 	public static Image couronne;
-	// initialisation du chateau, il est vide a la base
 	
+	// initialisation du royaume, il est vide a la base	
 	public Royaume() {
 		this.type = 0;
 		this.NbCouronne = 0;
@@ -91,7 +91,7 @@ public class Royaume  {
 	
 	
 	
-	//methode to string qui retourne la valeur de chaque type
+	//methode de string qui retourne la valeur de chaque type
 	public static int typeToInt(String type) {
 		switch (type) {
 		case "Champs":
@@ -163,7 +163,6 @@ public class Royaume  {
 		try {
 			typeToImage().draw(x, y, Jeu.dominoWidth, Jeu.dominoWidth);
 		} catch (SlickException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (NbCouronne != 0) {
@@ -178,8 +177,5 @@ public class Royaume  {
 		graphics.fillRect(x, y, Jeu.dominoWidth * 0.2f, Jeu.dominoWidth * 0.2f);
 		
 	}
-	
-
-
 	
 }
