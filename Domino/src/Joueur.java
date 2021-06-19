@@ -134,7 +134,7 @@ public class Joueur {
 		}
 	}
 	
-	public boolean isPlaceOk(Domino domino, int x, int y) { //methode pour placer le dominer selon la case ou le joueur va cliquer
+	public boolean isPlaceOk(Domino domino, int x, int y) { //méthode pour verifier si le type du domino sur lequel on va se placer est le meme
 
 		int type1 = domino.getType1();
 		int type2 = domino.getType2();
@@ -247,6 +247,7 @@ public class Joueur {
 		return true;
 	}
 
+	
 	public void removeDominoFromLand(Domino domino, int x, int y) { // Si lorsque l'on place le domino les dimensions du royaume depasse 5x5 on utilisera cette methode pour suprimer le domoni
 		switch (domino.getDirection()) {
 		case Domino.D1:
@@ -270,6 +271,7 @@ public class Joueur {
 			break;
 		}
 	}
+	
 	
 	public void placeDomino(Domino domino, int x, int y) { //m¨¦thode pour placer les domino
 		int type1 = domino.getType1();
@@ -318,13 +320,7 @@ public class Joueur {
 			break;
 		}
 	}
-	/**
-	 * 1.[9][9][4]µÄ[4]ÊÇÊ²Ã´£¿
-	 * 2.ÎªÊ²Ã´scoreListÒ»¿ªÊ¼µÈÓÚ-1ºÍscorelist´ú±íÁËÊ²Ã´
-	 * 3.setDirection£¬getNumDomino¸úDominoÓÐ¹Ø
-	 * 4.isLandOccupied£¬isPlaceOk£¬placeDomino£¬isDimensionOk£¬removeDominoFromLand¸újoueurÓÐ¹ØÏµ
-	 * 5¡£
-	 * */
+
 	
 	public boolean detectPositions(Domino domino) {
 		int availablePositions = 0;
@@ -452,6 +448,7 @@ public class Joueur {
 
 	}
 	
+	//méthode daffichage pour suivre le developpmement de chaque royaume
 	public void renderLandMini(Graphics graphics, float x, float y) { //affichage graphique des royaume sur la minimap
 		for (int i = 0; i < LAND_DIMENSION; i++) {
 			for (int j = 0; j < LAND_DIMENSION; j++) {
@@ -465,6 +462,7 @@ public class Joueur {
 		}
 	}
 	
+	//methode daffichage graphique des rois
 	public void renderRois(Graphics graphics, float x, float y) { //affichage graphique des rois
 		float d = Jeu.width * 0.1f;
 		int i = 0;
@@ -474,7 +472,7 @@ public class Joueur {
 		}
 	}
 	
-	
+	//méthode pour determiner les cases connectées du royaume à l’aide d’une pile ( stack )  
 	public void findRoyaume(Location location, int[][] crownNum) {
 		Deque<Location> stackCrown = new LinkedList<Location>();
 		stackCrown.push(location); // On met la location dans le stack
@@ -519,7 +517,7 @@ public class Joueur {
 				counter += land[x][y - 1].getNbCouronne();
 				continue;
 			}
-			stackCrown.pop(); // remove the top location in the stack
+			stackCrown.pop(); // supprime l'element en haut de la pile
 		}
 
 		for (int i = 0; i < 9; i++) { // rows
@@ -528,57 +526,8 @@ public class Joueur {
 					crownNum[i][j] = counter;
 			}
 		}
-		// Location elem = stackCrown.peek();
 	}
 	
-	public void verifieLand(int borderTop, int borderLeft) {
-		int tmpEmptyAreaNum = 0;
-		int tmpSingleEmptyAreaNum = 0;
-		
-		for (int i = borderTop; i != borderTop + MAX_DIMENSION; i++) {
-			for (int j = borderLeft; j != borderLeft + MAX_DIMENSION; j++) {
-				if (!land[i][j].estOccupe()) {
-					tmpEmptyAreaNum++;
-
-					if (isEmptyAreaSingle(i, j, borderTop, borderLeft)) {
-						tmpSingleEmptyAreaNum++;
-						//System.out.println(i + " " + j);
-					}
-
-				} else {
-					totalCrownNum += land[i][j].getNbCouronne();
-				}
-			}
-		}
-		emptyAreaNum = tmpEmptyAreaNum;
-		singleEmptyAreaNum = tmpSingleEmptyAreaNum;
-	}
-	
-	
-	//Methode pour verifier si les alentours d'une case sont libres, on utilisera cette methode pour verifier si le joueur peut placer un domino
-	public boolean isEmptyAreaSingle(int i, int j, int borderTop, int borderLeft) {
-		if (i == borderTop && j == borderLeft) {
-			return land[i + 1][j].estOccupe() && land[i][j + 1].estOccupe();
-		} else if (i == borderTop && j == borderLeft + MAX_DIMENSION - 1) {
-			return land[i][j - 1].estOccupe() && land[i + 1][j].estOccupe();
-		} else if (i == borderTop + MAX_DIMENSION - 1 && j == borderLeft) {
-			return land[i - 1][j].estOccupe() && land[i][j + 1].estOccupe();
-		} else if (i == borderTop + MAX_DIMENSION - 1 && j == borderLeft + MAX_DIMENSION - 1) {
-			return land[i - 1][j].estOccupe() && land[i][j - 1].estOccupe();
-		} else if (i == borderTop) {
-			return land[i][j - 1].estOccupe() && land[i + 1][j].estOccupe() && land[i][j + 1].estOccupe();
-		} else if (j == borderLeft) {
-			return land[i - 1][j].estOccupe() && land[i + 1][j].estOccupe() && land[i][j + 1].estOccupe();
-		} else if (i == borderTop + MAX_DIMENSION - 1) {
-			return land[i - 1][j].estOccupe() && land[i][j - 1].estOccupe() && land[i][j + 1].estOccupe();
-		} else if (j == borderLeft + MAX_DIMENSION - 1) {
-			return land[i - 1][j].estOccupe() && land[i][j - 1].estOccupe() && land[i + 1][j].estOccupe();
-		} else {
-			return land[i - 1][j].estOccupe() && land[i][j - 1].estOccupe() && land[i + 1][j].estOccupe()
-					&& land[i][j + 1].estOccupe();
-		}
-
-	}
 	
 
 }
