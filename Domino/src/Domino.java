@@ -3,12 +3,15 @@ import java.io.*;
 import org.newdawn.slick.*;
 public class Domino {
 	
+	//image crown et image couronne
+	public static Image crown = Royaume.couronne;
 	public static Image couronne = Royaume.couronne;
+	
 	//position du domino
 	private int x;
 	private int y;
 	
-	//On definit les attributs de domino pr¨¦sents aussi dans le fichier csv
+	//On definit les attributs de domino presents aussi dans le fichier csv
 	private int Nbcouronne1;
 	private int type1;
 	private int Nbcouronne2;
@@ -51,6 +54,7 @@ public class Domino {
 	private final static int TURN_RIGHT = Jeu.DROITE;
 	
 	
+	
 	// Constructeur pour d¨¦finir iniatialement un domino
 	public Domino(int Nbcouronne1, int type1, int Nbcouronne2, int type2, int numDomino) {
 		this.Nbcouronne1 = Nbcouronne1;
@@ -64,10 +68,6 @@ public class Domino {
 		this.y = Jeu.height / 2;
 
 	}
-	
-	public static Image crown = Royaume.couronne;
-	
-	
 	
 	//Getters et Setters
 	public int getNbcouronne1() {
@@ -141,10 +141,7 @@ public class Domino {
 	}
 	
 	public void turnDomino() {
-		/*
-		 * if (D1 <= direction && direction < D4) { direction++; } else { direction =
-		 * D1; }
-		 */
+		
 		boolean over = false;
 		do {
 			System.out.println("Turn Domino ? Y/N");
@@ -308,7 +305,4 @@ public class Domino {
 			}
 		}
 		
-		public static void main(String[] args) throws FileNotFoundException {
-
-		}
 }
