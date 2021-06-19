@@ -109,7 +109,7 @@ public class Joueur {
 	public boolean isLandOccupied(Domino d, int x, int y) {
 		switch (d.getDirection()) {
 		case 1:
-			// if : detect if out of border
+			
 			if (y < 8) {
 				return (this.land[x][y].estOccupe() || this.land[x][y + 1].estOccupe());
 			}
@@ -149,7 +149,7 @@ public class Joueur {
 		boolean piece2right = false;
 
 		switch (domino.getDirection()) {
-		// if in the corner, only detect some sides to avoid out of bounds
+		
 		case 1:
 			if (x > 0) {
 				piece1up = (land[x - 1][y].getType() == type1) || (land[x - 1][y].getType() == Royaume.CHATEAU);
@@ -221,7 +221,7 @@ public class Joueur {
 	}
 	
 	public boolean isDimensionOk() { //methode pour verifier qu'apres placement d'un domino les dimensions du royaume sont respectées ( maximum 5x5)
-		// for rows and columns
+		
 		int rowDimension = 0;
 		int columnDimension = 0;
 		int xDimension, yDimension;
@@ -327,7 +327,7 @@ public class Joueur {
 		scoreList = new int[9][9][4];
 		for (int i = 0; i < 9; i++) { // rows
 			for (int j = 0; j < 9; j++) { // columns
-				for (int k = 0; k < 4; k++) { // for direction 1 to 4
+				for (int k = 0; k < 4; k++) { // direction 1 to 4
 					scoreList[i][j][k] = -1; // initialisation
 					domino.setDirection(k + 1);
 					if (!isLandOccupied(domino, i, j) && isPlaceOk(domino, i, j)) {
@@ -405,8 +405,8 @@ public class Joueur {
 			}
 		}
 
-		for (int i = 0; i < 9; i++) { // rows
-			for (int j = 0; j < 9; j++) { // columns
+		for (int i = 0; i < 9; i++) { // ligne
+			for (int j = 0; j < 9; j++) { // colonne
 				if (nbcouronne[i][j] != -1)
 					score += nbcouronne[i][j];
 			}
@@ -472,7 +472,7 @@ public class Joueur {
 		}
 	}
 	
-	//m閠hode pour determiner les cases connect閑s du royaume � l抋ide d抲ne pile ( stack )  
+	//mehode pour determiner les cases connectes du royaume a l'aide d'une pile ( stack )  
 	public void findRoyaume(Location location, int[][] crownNum) {
 		Deque<Location> stackCrown = new LinkedList<Location>();
 		stackCrown.push(location); // On met la location dans le stack
@@ -481,12 +481,12 @@ public class Joueur {
 		int counter = land[x][y].getNbCouronne();
 		crownNum[x][y] = -2;
 
-		// Depth-First-Search
+		
 		while (!stackCrown.isEmpty()) {
 			x = stackCrown.peek().x;
 			y = stackCrown.peek().y;
 
-			// up
+			// haut
 			if (x > 0 && crownNum[x - 1][y] == -1 && land[x][y].getType() == land[x - 1][y].getType()) {
 				crownNum[x - 1][y] = -2;
 				stackCrown.push(new Location(x - 1, y));
@@ -494,7 +494,7 @@ public class Joueur {
 				continue;
 			}
 
-			// right
+			//gauche
 			if (y < 8 && crownNum[x][y + 1] == -1 && land[x][y].getType() == land[x][y + 1].getType()) {
 				crownNum[x][y + 1] = -2;
 				stackCrown.push(new Location(x, y + 1));
@@ -502,7 +502,7 @@ public class Joueur {
 				continue;
 			}
 
-			// down
+			// bas
 			if (x < 8 && crownNum[x + 1][y] == -1 && land[x][y].getType() == land[x + 1][y].getType()) {
 				crownNum[x + 1][y] = -2;
 				stackCrown.push(new Location(x + 1, y));
@@ -510,7 +510,7 @@ public class Joueur {
 				continue;
 			}
 
-			// right
+			// droit
 			if (y > 0 && crownNum[x][y - 1] == -1 && land[x][y].getType() == land[x][y - 1].getType()) {
 				crownNum[x][y - 1] = -2;
 				stackCrown.push(new Location(x, y - 1));
@@ -520,8 +520,8 @@ public class Joueur {
 			stackCrown.pop(); // supprime l'element en haut de la pile
 		}
 
-		for (int i = 0; i < 9; i++) { // rows
-			for (int j = 0; j < 9; j++) { // columns
+		for (int i = 0; i < 9; i++) { // ligne
+			for (int j = 0; j < 9; j++) { // colonne
 				if (crownNum[i][j] == -2)
 					crownNum[i][j] = counter;
 			}
