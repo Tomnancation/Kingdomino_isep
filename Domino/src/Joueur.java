@@ -85,17 +85,17 @@ public class Joueur {
 	}
 	// On initialise le royaume de chaque joueur
 	public static Royaume[][] intialiseLand() { 
-		Royaume[][] royaume = new Royaume[LAND_DIMENSION][LAND_DIMENSION]; // on cr®¶er un royaume
+		Royaume[][] royaume = new Royaume[LAND_DIMENSION][LAND_DIMENSION]; // on cr√©er un royaume
 		for (int i = 0; i != royaume.length; i++) {
 			for (int j = 0; j != royaume[i].length; j++) {
 				royaume[i][j] = (i == LAND_DIMENSION / 2 && j == LAND_DIMENSION / 2) ? new Royaume(Royaume.CHATEAU) : new Royaume();
-			} // on attribue des coordon®¶es a chaque case du royaume
+			} // on attribue des coordon√©es a chaque case du royaume
 		}
 		return royaume;
 	}
 	
 	
-	// m®¶thode que l'on va utiliser pour mettre a jour le royaume apres chaque changement
+	// m√©thode que l'on va utiliser pour mettre a jour le royaume apres chaque changement
 	public void printLand() {
 		for (int i = 0; i != land.length; i++) {
 			for (int j = 0; j != land[i].length; j++) {
@@ -134,7 +134,7 @@ public class Joueur {
 		}
 	}
 	
-	public boolean isPlaceOk(Domino domino, int x, int y) { //mÈthode pour verifier si le type du domino sur lequel on va se placer est le meme
+	public boolean isPlaceOk(Domino domino, int x, int y) { //mÈñ†hode pour verifier si le type du domino sur lequel on va se placer est le meme
 
 		int type1 = domino.getType1();
 		int type2 = domino.getType2();
@@ -220,7 +220,7 @@ public class Joueur {
 		return true;
 	}
 	
-	public boolean isDimensionOk() { //methode pour verifier qu'apres placement d'un domino les dimensions du royaume sont respect®¶es ( maximum 5x5)
+	public boolean isDimensionOk() { //methode pour verifier qu'apres placement d'un domino les dimensions du royaume sont respect√©es ( maximum 5x5)
 		// for rows and columns
 		int rowDimension = 0;
 		int columnDimension = 0;
@@ -273,7 +273,7 @@ public class Joueur {
 	}
 	
 	
-	public void placeDomino(Domino domino, int x, int y) { //m®¶thode pour placer les domino
+	public void placeDomino(Domino domino, int x, int y) { //m√©thode pour placer les domino
 		int type1 = domino.getType1();
 		int nbCouronne1 = domino.getNbcouronne1();
 		int type2 = domino.getType2();
@@ -352,7 +352,7 @@ public class Joueur {
 
 	}
 	
-	public class Location {  // classe pour creer et initialiser un point avec des coordon®¶es x et y don®¶es
+	public class Location {  // classe pour creer et initialiser un point avec des coordon√©es x et y don√©es
 		int x, y;
 
 		public Location(int x, int y) {
@@ -387,7 +387,7 @@ public class Joueur {
 
 
 	
-	public int calculateScore() {  //m®¶thode de calcul du score a la fin de la partie
+	public int calculateScore() {  //m√©thode de calcul du score a la fin de la partie
 		score = 0;
 		int[][] nbcouronne = new int[9][9];
 		for (int i = 0; i < 9; i++) { // ligne
@@ -448,7 +448,7 @@ public class Joueur {
 
 	}
 	
-	//mÈthode daffichage pour suivre le developpmement de chaque royaume
+	//mehode daffichage pour suivre le developpmement de chaque royaume
 	public void renderLandMini(Graphics graphics, float x, float y) { //affichage graphique des royaume sur la minimap
 		for (int i = 0; i < LAND_DIMENSION; i++) {
 			for (int j = 0; j < LAND_DIMENSION; j++) {
@@ -472,7 +472,7 @@ public class Joueur {
 		}
 	}
 	
-	//mÈthode pour determiner les cases connectÈes du royaume ‡ líaide díune pile ( stack )  
+	//mÈñ†hode pour determiner les cases connectÈñës du royaume ÔøΩ lÊäãide dÊä≤ne pile ( stack )  
 	public void findRoyaume(Location location, int[][] crownNum) {
 		Deque<Location> stackCrown = new LinkedList<Location>();
 		stackCrown.push(location); // On met la location dans le stack
@@ -527,7 +527,6 @@ public class Joueur {
 			}
 		}
 	}
-	
 	
 
 }
